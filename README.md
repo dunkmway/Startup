@@ -11,13 +11,13 @@ So don't miss out. Be "There".
 
 ### Design
 A list of events near you, an explore page.  
-![MockEvents](ThereMockup-Events.png)
+![MockEvents](Mockup/ThereMockup-Events.png)
 
 A chat for someone who did not attend. For those that did it will look like a normal chat.  
-![MockChat](ThereMockup-Chat.png)
+![MockChat](Mockup/ThereMockup-Chat.png)
 
 Sequence Diagram  
-![SequenceDiagram](ThereMockup-Sequence.png)  
+![SequenceDiagram](Mockup/ThereMockup-Sequence.png)  
 
 ### Key feature
 - Secure login over HTTPS
