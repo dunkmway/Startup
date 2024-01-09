@@ -10,13 +10,14 @@ Here's how it works: Events are marked geographically, ensuring that only those 
 So don't miss out. Be "There".
 
 ### Design
-A list of events near you, an explore page.
+A list of events near you, an explore page.  
 ![MockEvents](ThereMockup-Events.png)
 
-A chat for someone who did not attend. For those that did it will look like a normal chat.
+A chat for someone who did not attend. For those that did it will look like a normal chat.  
 ![MockChat](ThereMockup-Chat.png)
 
-![SequenceDiagram](ThereMock-Sequence.png)
+Sequence Diagram  
+![SequenceDiagram](ThereMockup-Sequence.png)  
 
 ### Key feature
 - Secure login over HTTPS
