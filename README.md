@@ -4,11 +4,7 @@
 ## Description deliverable
 
 ### Elevator pitch
-Imagine connecting with others at events in real-time, where physical presence unlocks exclusive conversations. With "There," events become more than just memories – they become immersive experiences.
-
-Here's how it works: Events are marked geographically, ensuring that only those physically present can engage in the chat. Share the excitement, laughter, and moments that define the event with a select audience, fostering genuine connections that transcend the virtual world. Meanwhile, everyone else is going to wake up the next morning with a bad case of FOMO. Some message can even be marked public igniting the curiosity of those not in attendance even more while they see all the messages they missed out on.
-
-So don't miss out. Be "There".
+Imagine connecting with others at events in real-time, where physical presence unlocks exclusive conversations. With "There," events become more than just memories – they become immersive experiences. Here's how it works: Events are marked geographically, ensuring that only those physically present can engage in the chat. Share the excitement, laughter, and moments that define the event with a select audience, fostering genuine connections that transcend the virtual world. Meanwhile, everyone else is going to wake up the next morning with a bad case of FOMO. Some message can even be marked public igniting the curiosity of those not in attendance even more while they see all the messages they missed out on. So don't miss out. Be "There".
 
 ### Design
 A list of events near you, an explore page.  
