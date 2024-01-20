@@ -9,6 +9,9 @@ SSH Command : ssh -i [Server Pem File] ubuntu@44.222.16.138
 
 Custom Domain : [startup.duncanmorais.com](http://startup.duncanmorais.com)
 
+## Certificates
+Caddy just does it for me! That's awesome! Manually generating the certificates and then having them get signed sucks to do.
+
 
 ## Home page
 I want to show something to not signed in people so maybe we show upcoming events.
