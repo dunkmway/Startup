@@ -9,6 +9,7 @@
     --cl-2: #848d97;
 
     --ac-1: #5588ff;
+    --ac-2: #11e5da;
 }
 
 *, *::before, *::after {
@@ -50,6 +51,21 @@ header {
     top: 0px;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.logo > * {
+    margin: 0;
+    padding: 0;
+}
+
+.logo > img {
+    width: 2rem;
+}
+
 header nav {
     margin-block: auto;
 }
@@ -67,4 +83,10 @@ header menu > li {
 
 main {
     flex: 1;
+}
+
+@media (max-width: 480px) {
+    .logo > h1 {
+        display: none;
+    }
 }
