@@ -12,6 +12,8 @@ main {
 }
 
 .event {
+    display: flex;
+    flex-direction: column;
     background-color: var(--bg-3);
     border-radius: 1em;
     max-width: 400px;
@@ -21,6 +23,7 @@ main {
 
 .event .body {
     padding: 0em 1em;
+    flex: 1;
 }
 
 .event .header {
@@ -32,4 +35,16 @@ main {
 
 .countdown {
     color: var(--cl-2);
+}
+
+.event button {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.5em;
+    text-align: center;
+    background-color: var(--ac-1);
+    color: var(--cl-1);
+    border: none;
+    cursor: pointer;
 }
