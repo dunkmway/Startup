@@ -81,6 +81,11 @@ header menu {
 
 header menu > li {
     list-style: none;
+    border-bottom: 2px solid transparent;
+}
+
+header menu > li:hover {
+    border-bottom-color: var(--ac-1);
 }
 
 main {
