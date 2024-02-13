@@ -10,59 +10,91 @@
 <body>
 
     <header>
-        <a href="index.html" class="logo">
-            <img src="images/Logo.png">
-            <h1>There</h1>
-        </a>
-        <nav>
-            <menu>
-                <li><a href="login.html">Log in</a></li>
-                <!-- These will appear only after logging in -->
-                <li><a href="new-event.html">Add Event</a></li>
-                <li><a href="profile.html">John Doe</a></li>
-            </menu>
-        </nav>
+        <button onclick="history.back()" class="back"></button>
+        <h2 id="eventName">The Awesome Event</h2>
+        <div class="spacer"></div>
     </header>
 
     <main>
-        <h2 id="eventName">The Awesome Event</h2>
-        
-        <section id="chat">
-            <div class="message-bubble">
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus suscipit nobis, ipsum in dolor nemo voluptatem delectus laborum aut voluptate commodi quidem adipisci alias, laboriosam harum provident eum nisi libero.</p>
-                <p>Lorem ipsum</p>
-            </div>
-            <div class="message-bubble">
-                <p>Libero dolore fuga magnam, incidunt unde quibusdam sed impedit facere illum quis deleniti nemo itaque consectetur vero eius nihil, natus dicta culpa. Id veritatis facilis dolore delectus. At, possimus illum!</p>
-                <p>Maxime ab</p>
-            </div>
-            <div class="message-bubble">
-                <p>Modi cumque voluptates impedit labore saepe mollitia? Ex neque deserunt, unde temporibus nam culpa, aspernatur exercitationem tenetur repellat est nemo commodi? Nobis facere libero id? Nulla dicta optio debitis repudiandae.</p>
-                <p>Nobis voluptatum</p>
-            </div>
-            <div class="message-bubble">
-                <p>Libero beatae quod aperiam perspiciatis animi ex harum a hic corrupti suscipit quasi neque explicabo soluta similique, ab quibusdam itaque impedit delectus assumenda, dolores temporibus ea error rem? Ut, alias?</p>
-                <p>Dicta animi</p>
-            </div>
-            <div class="message-bubble">
-                <p>Est velit alias sequi excepturi, vel, nulla sint tenetur laboriosam culpa dolorem fugiat! Modi minus debitis sunt ipsum quibusdam. Et omnis consequatur inventore placeat quia reiciendis asperiores porro ratione obcaecati?</p>
-                <p>Modi velit</p>
-            </div>
-            <div class="message-bubble">
-                <p>Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
-                <p>Amet perspiciatis</p>
-            </div>
-        </section>
-
-        <form action="" method="post" id="user-input">
-            <input type="text" id="message-input">
-            <button type="submit">Send</button>
-        </form>
+        <div class="message-bubble right">
+            <p class="author">Nobis voluptatum</p>
+            <p class="message">Modi cumque voluptates impedit labore saepe mollitia? Ex neque deserunt, unde temporibus nam culpa, aspernatur exercitationem tenetur repellat est nemo commodi? Nobis facere libero id? Nulla dicta optio debitis repudiandae.</p>
+        </div>
+        <div class="message-bubble left hidden">
+            <p class="author">Lorem ipsum</p>
+            <p class="message">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus suscipit nobis, ipsum in dolor nemo voluptatem delectus laborum aut voluptate commodi quidem adipisci alias, laboriosam harum provident eum nisi libero.</p>
+        </div>
+        <div class="message-bubble left hidden">
+            <p class="author">Maxime ab</p>
+            <p class="message">Libero dolore fuga magnam, incidunt unde quibusdam sed impedit facere illum quis deleniti nemo itaque consectetur vero eius nihil, natus dicta culpa. Id veritatis facilis dolore delectus. At, possimus illum!</p>
+        </div>
+        <div class="message-bubble right">
+            <p class="author">Nobis voluptatum</p>
+            <p class="message">Modi cumque voluptates impedit labore saepe mollitia? Ex neque deserunt, unde temporibus nam culpa, aspernatur exercitationem tenetur repellat est nemo commodi? Nobis facere libero id? Nulla dicta optio debitis repudiandae.</p>
+        </div>
+        <div class="message-bubble left">
+            <p class="author">Dicta animi</p>
+            <p class="message">Libero beatae quod aperiam perspiciatis animi ex harum a hic corrupti suscipit quasi neque explicabo soluta similique, ab quibusdam itaque impedit delectus assumenda, dolores temporibus ea error rem? Ut, alias?</p>
+        </div>
+        <div class="message-bubble right">
+            <p class="author">Modi velit</p>
+            <p class="message">Est velit alias sequi excepturi, vel, nulla sint tenetur laboriosam culpa dolorem fugiat! Modi minus debitis sunt ipsum quibusdam. Et omnis consequatur inventore placeat quia reiciendis asperiores porro ratione obcaecati?</p>
+        </div>
+        <div class="message-bubble right same">
+            <p class="author">Modi velit</p>
+            <p class="message">Est velit alias sequi excepturi, vel, nulla sint tenetur laboriosam culpa dolorem fugiat! Modi minus debitis sunt ipsum quibusdam. Et omnis consequatur inventore placeat quia reiciendis asperiores porro ratione obcaecati?</p>
+        </div>
+        <div class="message-bubble left hidden">
+            <p class="author">Amet perspiciatis</p>
+            <p class="message">Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
+        </div>
+        <div class="message-bubble left same">
+            <p class="author">Amet perspiciatis</p>
+            <p class="message">Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
+        </div>
+        <div class="message-bubble left hidden same">
+            <p class="author">Amet perspiciatis</p>
+            <p class="message">Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
+        </div>
+        <div class="message-bubble left hidden same">
+            <p class="author">Amet perspiciatis</p>
+            <p class="message">Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
+        </div>
+        <div class="message-bubble right">
+            <p class="author">Nobis voluptatum</p>
+            <p class="message">Modi cumque voluptates impedit labore saepe mollitia? Ex neque deserunt, unde temporibus nam culpa, aspernatur exercitationem tenetur repellat est nemo commodi? Nobis facere libero id? Nulla dicta optio debitis repudiandae.</p>
+        </div>
+        <div class="message-bubble right same">
+            <p class="author">Nobis voluptatum</p>
+            <p class="message">This is a shorter message.</p>
+        </div>
     </main>
-
-    <footer>
-        <p>Duncan Morais</p>
-        <a href="https://github.com/dunkmway/Startup">GitHub</a>
+    
+    <footer>        
+        <form id="user-input">
+            <textarea type="text" id="message-input" autocomplete="off"></textarea>
+            <button type="submit">
+                <svg id="map-marker" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <g id="Vivid.JS" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="Vivid-Icons" transform="translate(-125.000000, -643.000000)">
+                                <g id="Icons" transform="translate(37.000000, 169.000000)">
+                                    <g id="map-marker" transform="translate(78.000000, 468.000000)">
+                                        <g transform="translate(10.000000, 6.000000)">
+                                            <path d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z" id="Shape" fill="#FFFFFF">
+                                            </path>
+                                            <circle id="Oval" fill="#5588ff" fill-rule="nonzero" cx="14" cy="14" r="7"></circle>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </button>
+        </form>
     </footer>
 </body>
 </html>

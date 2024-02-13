@@ -1,1 +1,161 @@
-@import "main.css"
+@import "main.css";
+
+body {
+    overflow-x: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    height: 70px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+header .back {
+    padding: 1em;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+header .back::before {
+    content: "";
+    display: block;
+    width: 15px;
+    aspect-ratio: 1 / 1;
+    border: 3px solid transparent;
+    border-left-color: var(--ac-1);
+    border-bottom-color: var(--ac-1);
+    border-radius: 5px 0 5px 0;
+    transform: rotate(45deg);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 70px auto;
+}
+
+footer {
+    height: 70px;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+}
+
+footer > form {
+    max-width: 800px;
+    width: 100%;
+    position: relative;
+}
+
+form > textarea {
+    font-family: 'Roboto', sans-serif;
+    background-color: transparent;
+    border: 1px solid var(--cl-2);
+    border-radius: 0.5em;
+    font-size: 16px;
+    padding: 0.5em 4em 0.5em 1em;
+    width: 100%;
+    display: block;
+    color: var(--cl-1);
+    resize: none;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+form > button {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background-color: var(--ac-1);
+    color: var(--cl-1);
+
+    width: 30px;
+    padding: 5px;
+    font-size: 20px;
+    aspect-ratio: 1 / 1;
+
+    border-radius: 50%;
+    border: none;
+
+    cursor: pointer;
+}
+
+.message-bubble {
+    max-width: 80%;
+    margin-top: 1em;
+}
+
+.message-bubble.left {
+    align-self: flex-start;
+}
+
+.message-bubble.right {    
+    align-self: flex-end;
+}
+
+.message-bubble > p {
+    margin: 0;
+}
+
+.message-bubble > .message {
+    max-width: 100%;
+    width: max-content;
+    border-radius: 1em;
+    padding: 0.5em;
+}
+
+.message-bubble.hidden > .message {
+    color: transparent;
+    text-shadow: 0px 0px 7px var(--cl-1);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.message-bubble.left > .message {
+    background-color: var(--bg-3);
+}
+
+.message-bubble.right > .message {    
+    background-color: var(--ac-1);
+}
+
+.message-bubble > .author {
+    color: var(--cl-2);
+    font-size: .75em;
+}
+
+/* This is used when the message is immediately proceeded by the same author */
+.message-bubble.same {
+    margin-top: 1px;
+}
+
+.message-bubble.same > .author {
+    display: none;
+}
+
+.message-bubble.left > .author {
+    text-align: left;
+}
+
+.message-bubble.right > .author {    
+    display: none;
+}
