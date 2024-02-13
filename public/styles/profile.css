@@ -24,6 +24,5 @@
 }
 
 .heading button:hover {
-    background-color: var(--cl-1);
-    color: var(--ac-1);
+    box-shadow: 0px 0px 40px 5px rgba(255, 255, 255, 0.3);
 }
