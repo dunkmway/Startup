@@ -1,5 +1,5 @@
-@import "main.css";
-@import "form.css";
+@import "_main.css";
+@import "_form.css";
 
 main {
     max-width: 800px;
