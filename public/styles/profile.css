@@ -1,1 +1,72 @@
-@import "main.css"
+@import "main.css";
+
+main {
+    padding: 1em 2em;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.heading button {
+    display: block;
+    border: none;
+    border-radius: 1em;
+    padding: 0.5em 2em;
+    background-color: var(--ac-1);
+    color: var(--cl-1);
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.heading button:hover {
+    background-color: var(--cl-1);
+    color: var(--ac-1);
+}
+
+.event-grid {
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2em;
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-3);
+    border-radius: 1em;
+    max-width: 400px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.event .body {
+    padding: 0em 1em;
+    flex: 1;
+}
+
+.event .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--cl-2);
+}
+
+.countdown {
+    color: var(--cl-2);
+}
+
+.event button {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.5em;
+    text-align: center;
+    background-color: var(--ac-1);
+    color: var(--cl-1);
+    border: none;
+    cursor: pointer;
+}
