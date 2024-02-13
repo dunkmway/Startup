@@ -1,0 +1,28 @@
+form {
+    margin-top: 2em;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 1em;
+}
+
+.form-group > label {
+    display: block;
+    color: var(--cl-2);
+}
+
+.form-group > input, button {
+    font-size: 16px;
+    padding: 0.5em 1em;
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 0.5em;
+}
+
+button {
+    background-color: var(--ac-1);
+    color: var(--cl-1);
+    cursor: pointer;
+}

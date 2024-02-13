@@ -1,1 +1,7 @@
-@import "main.css"
+@import "main.css";
+@import "form.css";
+
+main {
+    max-width: 800px;
+    margin-inline: auto;
+}

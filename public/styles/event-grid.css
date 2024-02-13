@@ -1,0 +1,48 @@
+.event-grid {
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2em;
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-3);
+    border-radius: 1em;
+    max-width: 400px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.event:hover {
+    box-shadow: 0px 0px 40px 5px rgba(255, 255, 255, 0.3);
+}
+
+.event .body {
+    padding: 0em 1em;
+    flex: 1;
+}
+
+.event .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--cl-2);
+}
+
+.countdown {
+    color: var(--cl-2);
+}
+
+.event button {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.5em;
+    text-align: center;
+    background-color: var(--ac-1);
+    color: var(--cl-1);
+    border: none;
+    cursor: pointer;
+}
