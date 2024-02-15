@@ -54,3 +54,13 @@ For this deliverable I built out the structure of my application using HTML.
 - **Images** - Google maps image to represent the live visualization of google maps.
 - **DB/Login** - Input box and submit button for login. The events and their chats represent data pulled from the database.
 - **WebSocket** - The chat messages will be updated live by websockets. 
+
+## CSS deliverable
+For this deliverable I properly styled the application into its final appearance.
+
+  - Header, footer, and main content body use flex for proper responsive layout
+  - Navigation elements - I dropped the underlines and changed the color for anchor elements. I also added a hover effect to show an underline.
+  - Responsive to window resizing - My app looks great on all window sizes and devices
+  - Application elements - Used good contrast and whitespace
+  - Application text content - Consistent fonts
+  - Application images - Demo images are properly used and sized.
