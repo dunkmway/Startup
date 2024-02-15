@@ -114,7 +114,6 @@ form > button {
 
 .message-bubble > .message {
     max-width: 100%;
-    width: max-content;
     border-radius: 1em;
     padding: 0.5em;
 }
