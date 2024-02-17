@@ -4,6 +4,14 @@ body {
     overflow-x: hidden;
 }
 
+pre {
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
 header {
     display: flex;
     justify-content: space-between;
@@ -38,6 +46,7 @@ main {
     display: flex;
     flex-direction: column;
     max-width: 800px;
+    width: 100%;
     margin: 70px auto;
 }
 
@@ -108,7 +117,8 @@ form > button {
     align-self: flex-end;
 }
 
-.message-bubble > p {
+.message-bubble > p,
+.message-bubble > pre {
     margin: 0;
 }
 
@@ -116,6 +126,7 @@ form > button {
     max-width: 100%;
     border-radius: 1em;
     padding: 0.5em;
+    font-family: inherit;
 }
 
 .message-bubble.hidden > .message {

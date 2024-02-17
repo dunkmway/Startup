@@ -6,6 +6,7 @@
     <title>There</title>
 
     <link rel="stylesheet" href="styles/event.css">
+    <script type="module" src="scripts/event.js" defer></script>
 </head>
 <body>
 
@@ -15,7 +16,7 @@
         <div class="spacer"></div>
     </header>
 
-    <main>
+    <main id="chat">
         <div class="message-bubble right">
             <p class="author">Nobis voluptatum</p>
             <p class="message">Modi cumque voluptates impedit labore saepe mollitia? Ex neque deserunt, unde temporibus nam culpa, aspernatur exercitationem tenetur repellat est nemo commodi? Nobis facere libero id? Nulla dicta optio debitis repudiandae.</p>
@@ -72,7 +73,7 @@
     
     <footer>        
         <form id="user-input">
-            <textarea type="text" id="message-input" autocomplete="off"></textarea>
+            <textarea type="text" id="message-input" name="message" autocomplete="off"></textarea>
             <button type="submit">
                 <svg id="map-marker" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
