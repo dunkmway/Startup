@@ -83,6 +83,7 @@ header menu {
 header menu > li {
     list-style: none;
     border-bottom: 2px solid transparent;
+    cursor: pointer;
 }
 
 header menu > li:hover {

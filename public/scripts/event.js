@@ -1,5 +1,6 @@
 import Chat from './Chat.mjs';
-import { getCurrentUser, getRandomIndex } from './_helpers.mjs';
+import { getRandomIndex } from './_helpers.mjs';
+import { getCurrentUser } from './_auth.mjs';
 
 const MIN_RANDOM_MILLIS = 5000;
 const MAX_RANDOM_MILLIS = 15000;
