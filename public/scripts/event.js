@@ -1,4 +1,4 @@
-import Chat from './Chat.mjs';
+import Chat from './_Chat.mjs';
 import { getRandomIndex } from './_helpers.mjs';
 import { getCurrentUser } from './_auth.mjs';
 

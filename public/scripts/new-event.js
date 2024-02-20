@@ -1,6 +1,6 @@
 import { getCurrentUser } from "./_auth.mjs";
-import "./_maps.mjs";
 import { GoogleMap, Bounds } from "./_maps.mjs"
+import { arrayRemove } from "./_helpers.mjs";
 
 const LOCATION_OPTIONS = {
     timeout: 5000,
@@ -25,8 +25,13 @@ async function initialize() {
         // fill in the existing data
         fillInData(data);
 
+        // show the delete button
+        const deleteBtn = document.getElementById('delete');
+        deleteBtn.style.display = 'block';
+        deleteBtn.addEventListener('click', () =>  deleteEvent(data));
+
         // initialize the map with the existing bounds
-        const bounds = new Bounds(data.bounds.north, data.bounds.south, data.bounds.east, data.bounds.west);
+        const bounds = new Bounds(data.bounds);
         map = new GoogleMap(document.getElementById('map'), bounds.center(), bounds);
         map.enableEdit();
 
@@ -43,8 +48,8 @@ async function initialize() {
 }
 
 function fillInData(data) {
-    document.querySelectorAll('form input').forEach(input => {
-        input.value = data[input.name];
+    document.querySelectorAll('form input, form textarea').forEach(input => {
+        input.value = data[input.name] ?? '';
     });
 }
   
@@ -62,6 +67,11 @@ function locationNotFound(err) {
     map.enableEdit();
 }
 
+function deleteEvent(eventData) {
+    deleteEventFromDatabase(eventData);
+    location.href = `profile.html`
+}
+
 async function submit(event, eventID) {
     event.preventDefault();
     const target = event.target;
@@ -70,6 +80,7 @@ async function submit(event, eventID) {
     const data = {
         id: eventID,
         name: formData.get('name'),
+        description: formData.get('description'),
         start: formData.get('start'),
         end: formData.get('end'),
         bounds: map.getBounds(),
@@ -78,6 +89,7 @@ async function submit(event, eventID) {
 
     if (
         !data.name ||
+        !data.description ||
         !data.start ||
         !data.end ||
         !data.bounds
@@ -87,7 +99,7 @@ async function submit(event, eventID) {
     }
 
     await saveEventToDatabase(data);
-    location.href = `new-event.html?e=${data.id}`
+    location.href = `profile.html`
 }
 
 async function getEventFromDatabase(eventID) {
@@ -105,6 +117,31 @@ async function saveEventToDatabase(data) {
     let eventIDs = JSON.parse(eventIDsString);
     eventIDs.push(data.id);
     localStorage.setItem('events', JSON.stringify(eventIDs));
+
+    // update the user_events association
+    const usersIDsString = localStorage.getItem(`${data.creator.id}_events`) ?? "[]";
+    let user_eventIDs = JSON.parse(usersIDsString);
+    if (user_eventIDs.includes(data.id)) return 
+
+    user_eventIDs.push(data.id);
+    localStorage.setItem(`${data.creator.id}_events`, JSON.stringify(user_eventIDs));
+}
+
+async function deleteEventFromDatabase(data) {
+    // delete the event
+    localStorage.removeItem(data.id);
+
+    // update the events association
+    const eventIDsString = localStorage.getItem('events') ?? "[]";
+    let eventIDs = JSON.parse(eventIDsString);
+    arrayRemove(eventIDs, data.id);
+    localStorage.setItem('events', JSON.stringify(eventIDs));
+
+    // update the user_events association
+    const usersIDsString = localStorage.getItem(`${data.creator.id}_events`) ?? "[]";
+    let user_eventIDs = JSON.parse(usersIDsString);
+    arrayRemove(user_eventIDs, data.id);
+    localStorage.setItem(`${data.creator.id}_events`, JSON.stringify(user_eventIDs));
 }
 
 initialize();

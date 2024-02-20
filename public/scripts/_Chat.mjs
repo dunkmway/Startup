@@ -1,4 +1,4 @@
-import Message from "./Message.mjs";
+import Message from "./_Message.mjs";
 import { removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Chat {

@@ -10,6 +10,8 @@
 
     --ac-1: #5588ff;
     --ac-2: #11e5da;
+
+    --danger: #ff5555;
 }
 
 *, *::before, *::after {

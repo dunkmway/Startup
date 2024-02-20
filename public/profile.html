@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>There</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
     <link rel="stylesheet" href="styles/profile.css">
+    <script type="module" src="scripts/profile.js" defer></script>
 </head>
 <body>
     <header>
@@ -21,47 +23,7 @@
             <h2>My Events</h2>
             <a href="new-event.html"><button>New Event</button></a>
         </div>
-        <section id="events" class="event-grid">
-            <div class="event" onclick="location.href='new-event.html'">
-                <div class="map">
-                    <img src="images/demo_map.webp" alt="demo map" width="600px">
-                </div>
-                <div class="body">
-                    <div class="header">
-                        <h3>Fun Event</h3>
-                        <p class="countdown">33:24</p>
-                    </div>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas explicabo enim ducimus ea incidunt iure magni architecto vel esse ipsa quos voluptatum, quisquam id ipsam soluta perferendis ratione natus dolore.</p>
-                </div>
-                <button>Edit</button>
-            </div>
-            <div class="event" onclick="location.href='new-event.html'">
-                <div class="map">
-                    <img src="images/demo_map.webp" alt="demo map" width="600px">
-                </div>
-                <div class="body">
-                    <div class="header">
-                        <h3>Fun Event</h3>
-                        <p class="countdown">33:24</p>
-                    </div>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas explicabo enim ducimus ea incidunt iure magni architecto vel esse ipsa quos voluptatum, quisquam id ipsam soluta perferendis ratione natus dolore.</p>
-                </div>
-                <button>Edit</button>
-            </div>
-            <div class="event" onclick="location.href='new-event.html'">
-                <div class="map">
-                    <img src="images/demo_map.webp" alt="demo map" width="600px">
-                </div>
-                <div class="body">
-                    <div class="header">
-                        <h3>Fun Event</h3>
-                        <p class="countdown">33:24</p>
-                    </div>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas explicabo enim ducimus ea incidunt iure magni architecto vel esse ipsa quos voluptatum, quisquam id ipsam soluta perferendis ratione natus dolore.</p>
-                </div>
-                <button>Edit</button>
-            </div>
-        </section>
+        <section id="events" class="event-grid"></section>
     </main>
 
     <footer>

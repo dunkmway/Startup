@@ -1,5 +1,6 @@
 @import "_main.css";
 @import "_event-grid.css";
+@import "_placeholder.css";
 
 .heading {
     display: flex;

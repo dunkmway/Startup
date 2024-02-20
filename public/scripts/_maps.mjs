@@ -29,6 +29,8 @@ export class GoogleMap {
             minZoom: calculatedZoom,
         });
 
+        this._markers = [];
+
         if (bounds) {
             this._markers = [
                 new Marker({ position: { lat: bounds.north, lng: bounds.east } }),
@@ -40,6 +42,18 @@ export class GoogleMap {
                 bounds
             })
         }
+    }
+
+    enableMovement() {
+        this.map.setOptions({
+            zoomControl: true,
+            fullscreenControl: true,
+            draggable: true,
+            scrollwheel: true,
+            panControl: true,
+            maxZoom: 999,
+            minZoom: 0,
+        })
     }
 
     // add an event listner to the map to handle adding rectangles
@@ -112,15 +126,15 @@ function _getZoomLevelFromBound(wrapper, bounds) {
 
     const zoom = Math.log2(mapHeight * 156543.03392 * Math.cos(bounds.north * Math.PI / 180) / desiredMapHeight);
 
-    return Math.round(zoom)
+    return Math.floor(zoom)
 }
 
 export class Bounds {
-    constructor(north, south, east, west) {
-        this.north = north;
-        this.south = south;
-        this.east = east;
-        this.west = west;
+    constructor(boundsObj) {
+        this.north = boundsObj.north;
+        this.south = boundsObj.south;
+        this.east = boundsObj.east;
+        this.west = boundsObj.west;
     }
 
     center() {
@@ -137,16 +151,16 @@ export class Bounds {
         const [north, south] = cornerPos[0].lat() > cornerPos[1].lat() ? [cornerPos[0].lat(), cornerPos[1].lat()] : [cornerPos[1].lat(), cornerPos[0].lat()];
         const [east, west] = cornerPos[0].lng() > cornerPos[1].lng() ? [cornerPos[0].lng(), cornerPos[1].lng()] : [cornerPos[1].lng(), cornerPos[0].lng()];
     
-        return new Bounds(north, south, east, west);
+        return new Bounds({ north, south, east, west });
     }
 
     static fromRectangle(rectangle) {
         if (!rectangle) return null;
-        return new Bounds(
-            rectangle.getBounds().getNorthEast().lat(),
-            rectangle.getBounds().getSouthWest().lat(),
-            rectangle.getBounds().getNorthEast().lng(),
-            rectangle.getBounds().getSouthWest().lng(),
-        )
+        return new Bounds({
+            north: rectangle.getBounds().getNorthEast().lat(),
+            south: rectangle.getBounds().getSouthWest().lat(),
+            east: rectangle.getBounds().getNorthEast().lng(),
+            west: rectangle.getBounds().getSouthWest().lng()
+        })
     }
 }

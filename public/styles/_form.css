@@ -12,7 +12,7 @@ form {
     color: var(--cl-2);
 }
 
-.form-group > input, button {
+.form-group > input, form button {
     font-size: 16px;
     padding: 0.5em 1em;
     display: block;
@@ -22,7 +22,7 @@ form {
     font-family: 'Roboto', sans-serif;
 }
 
-button {
+form button {
     background-color: var(--ac-1);
     color: var(--cl-1);
     cursor: pointer;
