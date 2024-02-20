@@ -1,7 +1,27 @@
 @import "_main.css";
 @import "_form.css";
+@import "_placeholder.css";
 
 main {
-    max-width: 800px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+main > div {
+    flex: 1;
+}
+
+#map {
+    height: 80vh;
+}
+
+#loading-map {
+    height: 100%;
+}
+
+form {
+    max-width: 600px;
     margin-inline: auto;
 }
+  
