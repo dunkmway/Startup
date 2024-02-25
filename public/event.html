@@ -12,64 +12,20 @@
 
     <header>
         <button onclick="history.back()" class="back"></button>
-        <h2 id="eventName">The Awesome Event</h2>
-        <div class="spacer"></div>
+        <h2 id="eventName"></h2>
+        <div>
+            <input type="checkbox" id="infoToggle">
+            <label for="infoToggle" class="info">i</label>
+            <div id="eventDetails">
+                <p></p>
+                <div id="map">
+                    <div class="placeholder shimmer"></div>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <main id="chat">
-        <div class="message-bubble right">
-            <p class="author">Nobis voluptatum</p>
-            <p class="message">Modi cumque voluptates impedit labore saepe mollitia? Ex neque deserunt, unde temporibus nam culpa, aspernatur exercitationem tenetur repellat est nemo commodi? Nobis facere libero id? Nulla dicta optio debitis repudiandae.</p>
-        </div>
-        <div class="message-bubble left hidden">
-            <p class="author">Lorem ipsum</p>
-            <p class="message">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus suscipit nobis, ipsum in dolor nemo voluptatem delectus laborum aut voluptate commodi quidem adipisci alias, laboriosam harum provident eum nisi libero.</p>
-        </div>
-        <div class="message-bubble left hidden">
-            <p class="author">Maxime ab</p>
-            <p class="message">Libero dolore fuga magnam, incidunt unde quibusdam sed impedit facere illum quis deleniti nemo itaque consectetur vero eius nihil, natus dicta culpa. Id veritatis facilis dolore delectus. At, possimus illum!</p>
-        </div>
-        <div class="message-bubble right">
-            <p class="author">Nobis voluptatum</p>
-            <p class="message">Modi cumque voluptates impedit labore saepe mollitia? Ex neque deserunt, unde temporibus nam culpa, aspernatur exercitationem tenetur repellat est nemo commodi? Nobis facere libero id? Nulla dicta optio debitis repudiandae.</p>
-        </div>
-        <div class="message-bubble left">
-            <p class="author">Dicta animi</p>
-            <p class="message">Libero beatae quod aperiam perspiciatis animi ex harum a hic corrupti suscipit quasi neque explicabo soluta similique, ab quibusdam itaque impedit delectus assumenda, dolores temporibus ea error rem? Ut, alias?</p>
-        </div>
-        <div class="message-bubble right">
-            <p class="author">Modi velit</p>
-            <p class="message">Est velit alias sequi excepturi, vel, nulla sint tenetur laboriosam culpa dolorem fugiat! Modi minus debitis sunt ipsum quibusdam. Et omnis consequatur inventore placeat quia reiciendis asperiores porro ratione obcaecati?</p>
-        </div>
-        <div class="message-bubble right same">
-            <p class="author">Modi velit</p>
-            <p class="message">Est velit alias sequi excepturi, vel, nulla sint tenetur laboriosam culpa dolorem fugiat! Modi minus debitis sunt ipsum quibusdam. Et omnis consequatur inventore placeat quia reiciendis asperiores porro ratione obcaecati?</p>
-        </div>
-        <div class="message-bubble left hidden">
-            <p class="author">Amet perspiciatis</p>
-            <p class="message">Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
-        </div>
-        <div class="message-bubble left same">
-            <p class="author">Amet perspiciatis</p>
-            <p class="message">Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
-        </div>
-        <div class="message-bubble left hidden same">
-            <p class="author">Amet perspiciatis</p>
-            <p class="message">Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
-        </div>
-        <div class="message-bubble left hidden same">
-            <p class="author">Amet perspiciatis</p>
-            <p class="message">Accusamus quos quam maiores. Illum placeat est quo asperiores quasi totam architecto, perferendis earum ab ipsa animi itaque dolores aliquid quisquam iure nisi, vel vitae nihil. Velit corporis cumque voluptatum.</p>
-        </div>
-        <div class="message-bubble right">
-            <p class="author">Nobis voluptatum</p>
-            <p class="message">Modi cumque voluptates impedit labore saepe mollitia? Ex neque deserunt, unde temporibus nam culpa, aspernatur exercitationem tenetur repellat est nemo commodi? Nobis facere libero id? Nulla dicta optio debitis repudiandae.</p>
-        </div>
-        <div class="message-bubble right same">
-            <p class="author">Nobis voluptatum</p>
-            <p class="message">This is a shorter message.</p>
-        </div>
-    </main>
+    <main id="chat"></main>
     
     <footer>        
         <form id="user-input">

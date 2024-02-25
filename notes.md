@@ -23,6 +23,20 @@ I also added in a public folder in my own source directory to clean things up so
 
 
 ## Home page
-I want to show something to not signed in people so maybe we show upcoming events.
-Then if they want to click on them or do anything they'll have to sign in.
-Should we be showing some past and currently happening events as well?
+Handling time is too much
+instead of events just make it location based chat but once you check in once you have unlimited access to read chats but can't send more
+
+instead of showing all events just show ones near me
+will need to implement a way to see if bounds is found within certain radius, probably just check center point is within radius
+
+would also be cool to see a single map with all locations close by on a single map but not necessary
+
+## Chat
+Need to implement checkin
+I can treat the checkin as a message and then render it like when someone is added to a chat in ios or teams
+checkin will check if you are within the bounds of the event
+then I can just check all events for a checkin message from the user to set the isPublic boolean
+
+they can only send messages if physically there
+
+need to add in public toggle for user messages

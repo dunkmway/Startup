@@ -1,5 +1,5 @@
 import { getCurrentUser } from "./_auth.mjs";
-import Event from "./_Event.mjs";
+import MyEvent from "./_Event.mjs";
 
 async function initialize() {
     const user = getCurrentUser();
@@ -7,7 +7,7 @@ async function initialize() {
     const eventIDs = JSON.parse(eventIDsString);
 
     eventIDs.forEach(async eventID => {
-        const event = new Event(eventID);
+        const event = new MyEvent(eventID);
         await event.load();
         event.render(
             document.getElementById('events'),

@@ -145,6 +145,25 @@ export class Bounds {
         }
     }
 
+    contains(lat, lng) {
+        return this.north >= lat &&
+        this.south <= lat &&
+        this.east >= lng &&
+        this.west <= lng
+    }
+
+    /**
+     * Determine if the bounds is within a certain radius of the origin latitude and origin longitude
+     * @param {Number} originLat in degrees
+     * @param {Number} originLng in degrees
+     * @param {Number} radius in miles
+     * @returns {Boolean}
+     */
+    isWithinRadius(originLat, originLng, radius) {
+        const { lat, lng } = this.center();
+        return Math.sqrt(Math.pow(lat - originLat, 2) + Math.pow(lng - originLng, 2)) <= radius / 69;
+    }
+
     static fromCorners(corners) {
         if (corners.length != 2) return null;
     

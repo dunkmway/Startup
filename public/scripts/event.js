@@ -1,35 +1,56 @@
 import Chat from './_Chat.mjs';
 import { getRandomIndex } from './_helpers.mjs';
 import { getCurrentUser } from './_auth.mjs';
+import MyEvent from './_Event.mjs';
+import { Bounds } from './_maps.mjs';
+import { GoogleMap } from './_maps.mjs';
 
 const MIN_RANDOM_MILLIS = 5000;
 const MAX_RANDOM_MILLIS = 15000;
 
+const QUERY_PARAMS = (new URL(document.location)).searchParams;
+const EVENT_ID = QUERY_PARAMS.get('e');
+
 // TESTING
-localStorage.setItem('user', JSON.stringify({
-    id: "475fe371-baa1-481c-9a8e-b4f70111880f",
-    name: 'Duncan Morais'
-}))
-const EVENT = "e0911cbd-d43c-4414-a05d-86db4eaf38e9";
 const RANDOM_MESSAGE_COOLDOWN = 5;
 let currentRandomMessageLevel = 1;
 // TESTING
 
 const CURRENT_USER = getCurrentUser();
-const chatContainer = document.getElementById('chat');
-const CHAT = new Chat(
-    EVENT,
-    CURRENT_USER,
-    chatContainer,
-    false   // isPublic
-);
+
+initialize();
+
+async function initialize() {
+    // load the chat
+    const chatContainer = document.getElementById('chat');
+    const CHAT = new Chat(
+        EVENT_ID,
+        CURRENT_USER,
+        chatContainer,
+        true   // isPublic
+    );
+    document.getElementById('user-input').addEventListener('submit', (ev) => messageSubmit(ev, CHAT));
+
+    // load the event
+    const event = new MyEvent(EVENT_ID);
+    await event.load();
+
+    // set the title
+    document.getElementById('eventName').textContent = event.name;
+
+    // set the details
+    const mapWrapper = document.getElementById('map');
+    const bounds = new Bounds(event.bounds);
+    new GoogleMap(mapWrapper, bounds.center(), bounds).enableMovement();
+
+    document.querySelector('#eventDetails > p').textContent = event.description;
+}
 
 document.getElementById('message-input').addEventListener('keypress', (ev) => {
     if (ev.ctrlKey && ev.key == 'Enter') {
         document.getElementById('user-input').dispatchEvent(new Event('submit', { cancelable:true }));
     }
 })
-document.getElementById('user-input').addEventListener('submit', (ev) => messageSubmit(ev, CHAT));
 
 function messageSubmit(event, chat) {
     event.preventDefault();

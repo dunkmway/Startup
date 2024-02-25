@@ -1,6 +1,6 @@
 import { GoogleMap, Bounds } from "./_maps.mjs"
 
-export default class Event {
+export default class MyEvent {
     constructor(id) {
         this.id = id;
     }

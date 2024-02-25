@@ -1,5 +1,5 @@
 import "./_auth.mjs";
-import Event from "./_Event.mjs";
+import MyEvent from "./_Event.mjs";
 import { restartJavascriptDeliverable } from "./_helpers.mjs";
 
 document.getElementById('restart').addEventListener('click', restartJavascriptDeliverable)
@@ -10,7 +10,7 @@ async function initialize() {
     const eventIDs = JSON.parse(eventIDsString);
 
     eventIDs.forEach(async eventID => {
-        const event = new Event(eventID);
+        const event = new MyEvent(eventID);
         await event.load();
         event.render(
             document.getElementById('live-events'),

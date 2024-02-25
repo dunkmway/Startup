@@ -1,4 +1,5 @@
 @import "_main.css";
+@import "_placeholder.css";
 
 body {
     overflow-x: hidden;
@@ -13,6 +14,7 @@ pre {
 }
 
 header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     height: 70px;
@@ -40,6 +42,48 @@ header .back::before {
     border-bottom-color: var(--ac-1);
     border-radius: 5px 0 5px 0;
     transform: rotate(45deg);
+}
+
+#infoToggle {
+    position: absolute;
+    visibility: hidden;
+}
+
+header .info {
+    display: block;
+    width: 24px;
+    aspect-ratio: 1 / 1;
+    text-align: center;
+    border: 2px solid var(--cl-1);
+    border-radius: 50%;
+}
+
+#eventDetails {
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height ease-out 0.15s;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding-inline: 1em;
+}
+
+#eventDetails > p {
+    max-width: 400px;
+    margin-inline: auto;
+}
+
+#map {
+    height: 50vh;
+}
+
+#infoToggle:checked ~ #eventDetails {
+    max-height: calc(100vh - 140px);
+    height: calc(100vh - 140px);
+    transition: max-height ease-out 0.25s;
 }
 
 main {
