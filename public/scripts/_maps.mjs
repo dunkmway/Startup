@@ -9,7 +9,7 @@ const INITIAL_MAP_ZOOM = 14; // initial map zoom level
 
 // Request needed libraries.
 const { Map, Rectangle } = await google.maps.importLibrary("maps");
-const { Marker } = await google.maps.importLibrary("marker");
+const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
 export class GoogleMap {
     constructor(wrapper, position = BYU_COORDS, bounds = null) {
@@ -27,14 +27,15 @@ export class GoogleMap {
             panControl: false,
             maxZoom: calculatedZoom,
             minZoom: calculatedZoom,
+            mapId: '89b292be883fd595'
         });
 
         this._markers = [];
 
         if (bounds) {
             this._markers = [
-                new Marker({ position: { lat: bounds.north, lng: bounds.east } }),
-                new Marker({ position: { lat: bounds.south, lng: bounds.west } })
+                new AdvancedMarkerElement({ position: { lat: bounds.north, lng: bounds.east } }),
+                new AdvancedMarkerElement({ position: { lat: bounds.south, lng: bounds.west } })
             ]
     
             this.rectangle = new Rectangle({
@@ -75,7 +76,7 @@ export class GoogleMap {
 
         this.map.addListener("click", (e) => {
             const totalCorners = this._markers.length;
-            const marker = new Marker({ position: e.latLng })
+            const marker = new AdvancedMarkerElement({ position: e.latLng })
     
             switch (totalCorners) {
                 case 0:
@@ -148,8 +149,8 @@ export class Bounds {
         if (corners.length != 2) return null;
     
         const cornerPos = corners.map(marker => marker.position);
-        const [north, south] = cornerPos[0].lat() > cornerPos[1].lat() ? [cornerPos[0].lat(), cornerPos[1].lat()] : [cornerPos[1].lat(), cornerPos[0].lat()];
-        const [east, west] = cornerPos[0].lng() > cornerPos[1].lng() ? [cornerPos[0].lng(), cornerPos[1].lng()] : [cornerPos[1].lng(), cornerPos[0].lng()];
+        const [north, south] = cornerPos[0].lat > cornerPos[1].lat ? [cornerPos[0].lat, cornerPos[1].lat] : [cornerPos[1].lat, cornerPos[0].lat];
+        const [east, west] = cornerPos[0].lng > cornerPos[1].lng ? [cornerPos[0].lng, cornerPos[1].lng] : [cornerPos[1].lng, cornerPos[0].lng];
     
         return new Bounds({ north, south, east, west });
     }
