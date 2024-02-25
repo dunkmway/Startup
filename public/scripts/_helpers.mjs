@@ -14,10 +14,27 @@ export function arrayRemove(arr, value) {
   return arr;
 }
 
+export function restartJavascriptDeliverable() {
+  localStorage.clear();
+  window.location.replace('index.html');
+}
+
 export async function getManyToOneDataFromDatabase(manyName, oneID) {
-  // get the message IDs for this event from localStorage
   const manyIDsString = localStorage.getItem(`${oneID}_${manyName}s`) ?? "[]";
   const manyIDs = JSON.parse(manyIDsString);
-  // return the data in localStorage for each message
-  return manyIDs.map(id => JSON.parse(localStorage.getItem(id)))
+  return manyIDs.map(id => {
+    const data = JSON.parse(localStorage.getItem(id))
+    data.id = id;
+    return data;
+  })
+}
+
+export async function getManyFromDatabase(manyName) {
+  const manyIDsString = localStorage.getItem(`${manyName}s`) ?? "[]";
+  const manyIDs = JSON.parse(manyIDsString);
+  return manyIDs.map(id => {
+    const data = JSON.parse(localStorage.getItem(id))
+    data.id = id;
+    return data;
+  })
 }

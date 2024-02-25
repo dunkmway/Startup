@@ -13,6 +13,15 @@ form {
     max-width: 400px;
 }
 
+#passwordGroup {
+    display: none;
+}
+
+#error {
+    display: none;
+    color: var(--danger);
+}
+
 @media (max-width: 480px) {
     .logo > h1 {
         display: block;

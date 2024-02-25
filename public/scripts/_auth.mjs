@@ -29,11 +29,13 @@ function checkAuth() {
 }
 
 function renderHeader() {
-    const user = getCurrentUser();
     const menu = document.querySelector('header menu');
+    if (!menu) return;
+
+    const user = getCurrentUser();
     if (user) {
         const profile = document.createElement('li');
-        profile.textContent = user.name;
+        profile.textContent = user.username;
         profile.addEventListener('click', () => location.href = 'profile.html');
         menu.appendChild(profile);
 
@@ -58,4 +60,5 @@ export function getCurrentUser() {
 function signOutUser() {
     localStorage.removeItem('user');
     checkAuth();
+    renderHeader();
 }

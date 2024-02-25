@@ -115,15 +115,17 @@ async function saveEventToDatabase(data) {
     // update the events association
     const eventIDsString = localStorage.getItem('events') ?? "[]";
     let eventIDs = JSON.parse(eventIDsString);
-    eventIDs.push(data.id);
+    if (!eventIDs.includes(data.id)) {
+        eventIDs.push(data.id);
+    }
     localStorage.setItem('events', JSON.stringify(eventIDs));
 
     // update the user_events association
     const usersIDsString = localStorage.getItem(`${data.creator.id}_events`) ?? "[]";
     let user_eventIDs = JSON.parse(usersIDsString);
-    if (user_eventIDs.includes(data.id)) return 
-
-    user_eventIDs.push(data.id);
+    if (!user_eventIDs.includes(data.id)) {
+        user_eventIDs.push(data.id);
+    }
     localStorage.setItem(`${data.creator.id}_events`, JSON.stringify(user_eventIDs));
 }
 
