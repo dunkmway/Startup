@@ -2,7 +2,7 @@ import Message from "./_Message.mjs";
 import { removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Chat {
-    constructor(event, user, container, isPublic = false) {
+    constructor(event, user, container, isPublic = true) {
         this.event = event;
         this.container = container;
         this.user = user;
@@ -10,12 +10,13 @@ export default class Chat {
 
         this.messages = this._getDatabaseMessages();
 
-        this._render();
+        this._render(true);
     }
 
     // used to add a message from the current user
     addMessage(content) {
         if (!this.user) return;
+        if (!content.trim()) return;
 
         // construct the message with all defaults
         const newMessage = new Message(
@@ -60,13 +61,28 @@ export default class Chat {
         return newMessage;
     }
 
+    makePublic() {
+        this.isPublic = true;
+        this._render();
+    }
+
+    makePrivate() {
+        this.isPublic = false;
+        this._render();
+    }
+
     _scrollToMessage(message) {
         message.element.scrollIntoView();
     }
 
-    // will rerender the entire chat
-    _render() {
-        removeAllChildNodes(this.container);
+    /**
+     * 
+     * @param {Boolean} rerender will remove all messages and rerender them.
+     */
+    _render(rerender = false) {
+        if (rerender) {
+            removeAllChildNodes(this.container);
+        }
         this.messages.forEach(message => {
             this.isPublic ? message.renderPublic(this.container) : message.renderPrivate(this.container);
         });

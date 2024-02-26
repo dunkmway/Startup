@@ -10,6 +10,9 @@ const MAX_RANDOM_MILLIS = 15000;
 
 const QUERY_PARAMS = (new URL(document.location)).searchParams;
 const EVENT_ID = QUERY_PARAMS.get('e');
+const LOCATION_OPTIONS = {
+    enableHighAccuracy: true
+};
 
 // TESTING
 const RANDOM_MESSAGE_COOLDOWN = 5;
@@ -17,23 +20,24 @@ let currentRandomMessageLevel = 1;
 // TESTING
 
 const CURRENT_USER = getCurrentUser();
+const chatContainer = document.getElementById('chat');
 
 initialize();
 
 async function initialize() {
-    // load the chat
-    const chatContainer = document.getElementById('chat');
-    const CHAT = new Chat(
-        EVENT_ID,
-        CURRENT_USER,
-        chatContainer,
-        true   // isPublic
-    );
-    document.getElementById('user-input').addEventListener('submit', (ev) => messageSubmit(ev, CHAT));
-
     // load the event
     const event = new MyEvent(EVENT_ID);
     await event.load();
+
+    const chat = new Chat(
+        EVENT_ID,
+        CURRENT_USER,
+        chatContainer
+    );
+    document.getElementById('user-input').addEventListener('submit', (ev) => messageSubmit(ev, chat));
+
+    // get the current location
+    checkForLocation(event, chat);
 
     // set the title
     document.getElementById('eventName').textContent = event.name;
@@ -42,8 +46,33 @@ async function initialize() {
     const mapWrapper = document.getElementById('map');
     const bounds = new Bounds(event.bounds);
     new GoogleMap(mapWrapper, bounds.center(), bounds).enableMovement();
-
     document.querySelector('#eventDetails > p').textContent = event.description;
+}
+
+function checkForLocation(event, chat) {
+    navigator.geolocation.getCurrentPosition((pos) => locationFound(pos, event, chat), (err) => locationNotFound(err, chat), LOCATION_OPTIONS);
+    setTimeout(() => checkForLocation(event, chat), 10000);
+}
+
+function locationFound(pos, event, chat) {
+    const bounds = new Bounds(event.bounds);
+    // if the current position is within the bounds
+    if (bounds.contains(pos.coords.latitude, pos.coords.longitude)) {
+        // within bounds
+        chat.makePrivate();
+        document.querySelector('#user-input > textarea').disabled = false;
+    } else {
+        chat.makePublic();
+        document.querySelector('#user-input > textarea').disabled = true;
+    }
+
+    // TESTING start running random messages
+    createRandomMessage(chat);
+}
+
+function locationNotFound(err, chat) {
+    chat.makePublic();
+        document.querySelector('#user-input > textarea').disabled = true;
 }
 
 document.getElementById('message-input').addEventListener('keypress', (ev) => {
@@ -55,6 +84,8 @@ document.getElementById('message-input').addEventListener('keypress', (ev) => {
 function messageSubmit(event, chat) {
     event.preventDefault();
     const target = event.target;
+
+    if (chat.isPublic) return;
 
     const data = new FormData(target);
     chat.addMessage(data.get('message'));
@@ -84,8 +115,6 @@ function createRandomMessage(chat) {
 
     }, randomMillis)
 }
-
-createRandomMessage(CHAT);
 
 const randomMessages = [
     "The fact that there's a stairway to heaven and a highway to hell explains life well.",

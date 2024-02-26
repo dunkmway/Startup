@@ -1,4 +1,4 @@
-import { getRandomIndex } from "./_helpers.mjs";
+import { getRandomIndex, removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Message {
     constructor(event, content, user, isSame, isOwner = true, isPublic = false, createdAt = null, id = null) {
@@ -22,15 +22,26 @@ export default class Message {
 
     _save_localStorage() {
         // we don't want to save the element
-        delete this.element;
+        const clone = {
+            event: this.event,
+            content: this.content,
+            author: this.author,
+            isSame: this.isSame,
+            isOwner: this.isOwner,
+            isPublic: this.isPublic,
+            createdAt: this.createdAt,
+            id: this.id
+        };
         // save the message
-        localStorage.setItem(this.id, JSON.stringify(this));
+        localStorage.setItem(clone.id, JSON.stringify(clone));
 
         // update the event_messages association
-        const messageIDsString = localStorage.getItem(`${this.event}_messages`) ?? "[]";
+        const messageIDsString = localStorage.getItem(`${clone.event}_messages`) ?? "[]";
         let messageIDs = JSON.parse(messageIDsString);
-        messageIDs.push(this.id);
-        localStorage.setItem(`${this.event}_messages`, JSON.stringify(messageIDs));
+        if (!messageIDs.includes(clone.id)) {
+            messageIDs.push(clone.id);
+        }
+        localStorage.setItem(`${clone.event}_messages`, JSON.stringify(messageIDs));
     }
 
     renderPublic(container) {
@@ -50,6 +61,7 @@ export default class Message {
         }
 
         // rerendering
+        removeAllChildNodes(this.element);
         const author = document.createElement('p');
         author.className = 'author';
         author.textContent = this.author.name;
@@ -62,7 +74,25 @@ export default class Message {
         this.element.appendChild(message);
         
         this.element.classList.add(this.isOwner ? 'right' : 'left');
+        if (this.isOwner) {
+            // include the visibility toggle
+            const toggle = document.createElement('div');
+            toggle.className = 'toggle';
+            toggle.innerHTML = `
+            ${this.isPublic ?
+                '<img src="images/visible.png">':
+                '<img src="images/invisible.png">'
+            }
+            `
+            toggle.addEventListener('click', () => {
+                this.isPublic = !this.isPublic;
+                this.save();
+                this._render(container, isPublicRendering);
+            })
+            this.element.appendChild(toggle);
+        }
         isHidden && this.element.classList.add('hidden');
+        !isHidden && this.element.classList.remove('hidden');
         this.isSame && this.element.classList.add('same');
     }
 }
