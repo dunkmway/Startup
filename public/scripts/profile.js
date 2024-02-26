@@ -1,17 +1,17 @@
 import { getCurrentUser } from "./_auth.mjs";
-import MyEvent from "./_Event.mjs";
+import Place from "./_Place.mjs";
 
 async function initialize() {
     const user = getCurrentUser();
-    const eventIDsString = localStorage.getItem(`${user.id}_events`) ?? "[]";
-    const eventIDs = JSON.parse(eventIDsString);
+    const placeIDsString = localStorage.getItem(`${user.id}_places`) ?? "[]";
+    const placeIDs = JSON.parse(placeIDsString);
 
-    eventIDs.forEach(async eventID => {
-        const event = new MyEvent(eventID);
-        await event.load();
-        event.render(
-            document.getElementById('events'),
-            () => location.href = `new-event.html?e=${eventID}`,
+    placeIDs.forEach(async placeID => {
+        const place = new Place(placeID);
+        await place.load();
+        place.render(
+            document.getElementById('places'),
+            () => location.href = `new-place.html?e=${placeID}`,
             'Edit'
         )
     });

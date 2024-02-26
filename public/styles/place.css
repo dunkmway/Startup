@@ -58,7 +58,7 @@ header .info {
     border-radius: 50%;
 }
 
-#eventDetails {
+#placeDetails {
     position: absolute;
     width: 100%;
     top: 100%;
@@ -71,7 +71,7 @@ header .info {
     padding-inline: 1em;
 }
 
-#eventDetails > p {
+#placeDetails > p {
     max-width: 400px;
     margin-inline: auto;
 }
@@ -80,7 +80,7 @@ header .info {
     height: 50vh;
 }
 
-#infoToggle:checked ~ #eventDetails {
+#infoToggle:checked ~ #placeDetails {
     max-height: calc(100vh - 140px);
     height: calc(100vh - 140px);
     transition: max-height ease-out 0.25s;

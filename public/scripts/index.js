@@ -1,20 +1,20 @@
 import "./_auth.mjs";
-import MyEvent from "./_Event.mjs";
+import Place from "./_Place.mjs";
 import { restartJavascriptDeliverable } from "./_helpers.mjs";
 
 document.getElementById('restart').addEventListener('click', restartJavascriptDeliverable)
 
 
 async function initialize() {
-    const eventIDsString = localStorage.getItem(`events`) ?? "[]";
-    const eventIDs = JSON.parse(eventIDsString);
+    const placeIDsString = localStorage.getItem(`places`) ?? "[]";
+    const placeIDs = JSON.parse(placeIDsString);
 
-    eventIDs.forEach(async eventID => {
-        const event = new MyEvent(eventID);
-        await event.load();
-        event.render(
-            document.getElementById('live-events'),
-            () => location.href = `event.html?e=${eventID}`,
+    placeIDs.forEach(async placeID => {
+        const place = new Place(placeID);
+        await place.load();
+        place.render(
+            document.getElementById('all-places'),
+            () => location.href = `place.html?e=${placeID}`,
             'View'
         )
     });

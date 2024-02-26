@@ -11,14 +11,14 @@ const QUERY_PARAMS = (new URL(document.location)).searchParams;
 let map;
 
 async function initialize() {
-    let eventID;
+    let placeID;
     
     if (QUERY_PARAMS.get('e')) {
         // edit
-        eventID = QUERY_PARAMS.get('e');
-        const data = await getEventFromDatabase(eventID);
+        placeID = QUERY_PARAMS.get('e');
+        const data = await getPlaceFromDatabase(placeID);
         if (!data) {
-            location.href = 'new-event.html'
+            location.href = 'new-place.html'
             return;
         }
 
@@ -28,7 +28,7 @@ async function initialize() {
         // show the delete button
         const deleteBtn = document.getElementById('delete');
         deleteBtn.style.display = 'block';
-        deleteBtn.addEventListener('click', () =>  deleteEvent(data));
+        deleteBtn.addEventListener('click', () =>  deletePlace(data));
 
         // initialize the map with the existing bounds
         const bounds = new Bounds(data.bounds);
@@ -37,14 +37,14 @@ async function initialize() {
 
     } else {
         // new
-        eventID = self.crypto.randomUUID();
+        placeID = self.crypto.randomUUID();
 
         // get the current location and initialize the map
         navigator.geolocation.getCurrentPosition(locationFound, locationNotFound, LOCATION_OPTIONS);
     }
 
     // set up the form submit action
-    document.querySelector('form').addEventListener('submit', (ev) => submit(ev, eventID));
+    document.querySelector('form').addEventListener('submit', (ev) => submit(ev, placeID));
 }
 
 function fillInData(data) {
@@ -67,18 +67,18 @@ function locationNotFound(err) {
     map.enableEdit();
 }
 
-function deleteEvent(eventData) {
-    deleteEventFromDatabase(eventData);
+function deletePlace(placeData) {
+    deletePlaceFromDatabase(placeData);
     location.href = `profile.html`
 }
 
-async function submit(event, eventID) {
+async function submit(event, placeID) {
     event.preventDefault();
     const target = event.target;
     const formData = new FormData(target);
 
     const data = {
-        id: eventID,
+        id: placeID,
         name: formData.get('name'),
         description: formData.get('description'),
         bounds: map.getBounds(),
@@ -94,52 +94,52 @@ async function submit(event, eventID) {
         return;
     }
 
-    await saveEventToDatabase(data);
+    await savePlaceToDatabase(data);
     location.href = `profile.html`
 }
 
-async function getEventFromDatabase(eventID) {
-    const dataString = localStorage.getItem(eventID);
+async function getPlaceFromDatabase(placeID) {
+    const dataString = localStorage.getItem(placeID);
     if (!dataString) return null;
     return JSON.parse(dataString);
 }
 
-async function saveEventToDatabase(data) {
-    // save the event
+async function savePlaceToDatabase(data) {
+    // save the place
     localStorage.setItem(data.id, JSON.stringify(data));
 
-    // update the events association
-    const eventIDsString = localStorage.getItem('events') ?? "[]";
-    let eventIDs = JSON.parse(eventIDsString);
-    if (!eventIDs.includes(data.id)) {
-        eventIDs.push(data.id);
+    // update the places association
+    const palceIDsString = localStorage.getItem('places') ?? "[]";
+    let placeIDs = JSON.parse(palceIDsString);
+    if (!placeIDs.includes(data.id)) {
+        placeIDs.push(data.id);
     }
-    localStorage.setItem('events', JSON.stringify(eventIDs));
+    localStorage.setItem('places', JSON.stringify(placeIDs));
 
-    // update the user_events association
-    const usersIDsString = localStorage.getItem(`${data.creator.id}_events`) ?? "[]";
-    let user_eventIDs = JSON.parse(usersIDsString);
-    if (!user_eventIDs.includes(data.id)) {
-        user_eventIDs.push(data.id);
+    // update the user_places association
+    const usersIDsString = localStorage.getItem(`${data.creator.id}_places`) ?? "[]";
+    let user_placeIDs = JSON.parse(usersIDsString);
+    if (!user_placeIDs.includes(data.id)) {
+        user_placeIDs.push(data.id);
     }
-    localStorage.setItem(`${data.creator.id}_events`, JSON.stringify(user_eventIDs));
+    localStorage.setItem(`${data.creator.id}_places`, JSON.stringify(user_placeIDs));
 }
 
-async function deleteEventFromDatabase(data) {
-    // delete the event
+async function deletePlaceFromDatabase(data) {
+    // delete the place
     localStorage.removeItem(data.id);
 
-    // update the events association
-    const eventIDsString = localStorage.getItem('events') ?? "[]";
-    let eventIDs = JSON.parse(eventIDsString);
-    arrayRemove(eventIDs, data.id);
-    localStorage.setItem('events', JSON.stringify(eventIDs));
+    // update the places association
+    const placeIDsString = localStorage.getItem('places') ?? "[]";
+    let placeIDs = JSON.parse(placeIDsString);
+    arrayRemove(placeIDs, data.id);
+    localStorage.setItem('places', JSON.stringify(placeIDs));
 
-    // update the user_events association
-    const usersIDsString = localStorage.getItem(`${data.creator.id}_events`) ?? "[]";
-    let user_eventIDs = JSON.parse(usersIDsString);
-    arrayRemove(user_eventIDs, data.id);
-    localStorage.setItem(`${data.creator.id}_events`, JSON.stringify(user_eventIDs));
+    // update the user_places association
+    const usersIDsString = localStorage.getItem(`${data.creator.id}_places`) ?? "[]";
+    let user_placeIDs = JSON.parse(usersIDsString);
+    arrayRemove(user_placeIDs, data.id);
+    localStorage.setItem(`${data.creator.id}_places`, JSON.stringify(user_placeIDs));
 }
 
 initialize();

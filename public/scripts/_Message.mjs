@@ -1,8 +1,8 @@
 import { getRandomIndex, removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Message {
-    constructor(event, content, user, isSame, isOwner = true, isPublic = false, createdAt = null, id = null) {
-        this.event = event;                                     // event id
+    constructor(place, content, user, isSame, isOwner = true, isPublic = false, createdAt = null, id = null) {
+        this.place = place;                                     // place id
         this.content = content;                                 // text content of the message
         this.author = user;                                     // user object of the author of the message { id, name }
         this.isSame = isSame;                                   // whether or not this message is preceeded by another message of the same author
@@ -23,7 +23,7 @@ export default class Message {
     _save_localStorage() {
         // we don't want to save the element
         const clone = {
-            event: this.event,
+            place: this.place,
             content: this.content,
             author: this.author,
             isSame: this.isSame,
@@ -35,13 +35,13 @@ export default class Message {
         // save the message
         localStorage.setItem(clone.id, JSON.stringify(clone));
 
-        // update the event_messages association
-        const messageIDsString = localStorage.getItem(`${clone.event}_messages`) ?? "[]";
+        // update the place_messages association
+        const messageIDsString = localStorage.getItem(`${clone.place}_messages`) ?? "[]";
         let messageIDs = JSON.parse(messageIDsString);
         if (!messageIDs.includes(clone.id)) {
             messageIDs.push(clone.id);
         }
-        localStorage.setItem(`${clone.event}_messages`, JSON.stringify(messageIDs));
+        localStorage.setItem(`${clone.place}_messages`, JSON.stringify(messageIDs));
     }
 
     renderPublic(container) {

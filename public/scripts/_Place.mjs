@@ -1,6 +1,6 @@
 import { GoogleMap, Bounds } from "./_maps.mjs"
 
-export default class MyEvent {
+export default class Place {
     constructor(id) {
         this.id = id;
     }
@@ -15,10 +15,10 @@ export default class MyEvent {
     }
 
     render(container, onclick, btnMsg) {
-        const eventWrapper = document.createElement('div');
-        eventWrapper.className = 'event';
-        eventWrapper.addEventListener('click', onclick)
-        eventWrapper.innerHTML = `
+        const placeWrapper = document.createElement('div');
+        placeWrapper.className = 'place';
+        placeWrapper.addEventListener('click', onclick)
+        placeWrapper.innerHTML = `
             <div class="map">
                 <div class="placeholder shimmer"></div>
             </div>
@@ -31,9 +31,9 @@ export default class MyEvent {
             </div>
             <button>${btnMsg}</button>
         `
-        container.appendChild(eventWrapper);
+        container.appendChild(placeWrapper);
     
-        const mapWrapper = eventWrapper.querySelector('.map');
+        const mapWrapper = placeWrapper.querySelector('.map');
         const bounds = new Bounds(this.bounds);
         new GoogleMap(mapWrapper, bounds.center(), bounds);
     }

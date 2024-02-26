@@ -1,7 +1,7 @@
 import Chat from './_Chat.mjs';
 import { getRandomIndex } from './_helpers.mjs';
 import { getCurrentUser } from './_auth.mjs';
-import MyEvent from './_Event.mjs';
+import Place from './_Place.mjs';
 import { Bounds } from './_maps.mjs';
 import { GoogleMap } from './_maps.mjs';
 
@@ -9,7 +9,7 @@ const MIN_RANDOM_MILLIS = 5000;
 const MAX_RANDOM_MILLIS = 15000;
 
 const QUERY_PARAMS = (new URL(document.location)).searchParams;
-const EVENT_ID = QUERY_PARAMS.get('e');
+const PLACE_ID = QUERY_PARAMS.get('e');
 const LOCATION_OPTIONS = {
     enableHighAccuracy: true
 };
@@ -25,37 +25,37 @@ const chatContainer = document.getElementById('chat');
 initialize();
 
 async function initialize() {
-    // load the event
-    const event = new MyEvent(EVENT_ID);
-    await event.load();
+    // load the place
+    const place = new Place(PLACE_ID);
+    await place.load();
 
     const chat = new Chat(
-        EVENT_ID,
+        PLACE_ID,
         CURRENT_USER,
         chatContainer
     );
     document.getElementById('user-input').addEventListener('submit', (ev) => messageSubmit(ev, chat));
 
     // get the current location
-    checkForLocation(event, chat);
+    checkForLocation(place, chat);
 
     // set the title
-    document.getElementById('eventName').textContent = event.name;
+    document.getElementById('placeName').textContent = place.name;
 
     // set the details
     const mapWrapper = document.getElementById('map');
-    const bounds = new Bounds(event.bounds);
+    const bounds = new Bounds(place.bounds);
     new GoogleMap(mapWrapper, bounds.center(), bounds).enableMovement();
-    document.querySelector('#eventDetails > p').textContent = event.description;
+    document.querySelector('#placeDetails > p').textContent = place.description;
 }
 
-function checkForLocation(event, chat) {
-    navigator.geolocation.getCurrentPosition((pos) => locationFound(pos, event, chat), (err) => locationNotFound(err, chat), LOCATION_OPTIONS);
-    setTimeout(() => checkForLocation(event, chat), 10000);
+function checkForLocation(place, chat) {
+    navigator.geolocation.getCurrentPosition((pos) => locationFound(pos, place, chat), (err) => locationNotFound(err, chat), LOCATION_OPTIONS);
+    setTimeout(() => checkForLocation(place, chat), 10000);
 }
 
-function locationFound(pos, event, chat) {
-    const bounds = new Bounds(event.bounds);
+function locationFound(pos, place, chat) {
+    const bounds = new Bounds(place.bounds);
     // if the current position is within the bounds
     if (bounds.contains(pos.coords.latitude, pos.coords.longitude)) {
         // within bounds

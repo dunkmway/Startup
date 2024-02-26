@@ -2,8 +2,8 @@ import Message from "./_Message.mjs";
 import { removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Chat {
-    constructor(event, user, container, isPublic = true) {
-        this.event = event;
+    constructor(place, user, container, isPublic = true) {
+        this.place = place;
         this.container = container;
         this.user = user;
         this.isPublic = isPublic;
@@ -20,7 +20,7 @@ export default class Chat {
 
         // construct the message with all defaults
         const newMessage = new Message(
-            this.event,
+            this.place,
             content,
             this.user,
             this._isMessageSame(this.user)
@@ -43,7 +43,7 @@ export default class Chat {
     addFakeMessage(content, user) {
         // construct the message with defaults except set isOwner to false
         const newMessage = new Message(
-            this.event,
+            this.place,
             content,
             user,
             this._isMessageSame(user),
@@ -89,7 +89,7 @@ export default class Chat {
     }
 
     _getDatabaseMessages() {
-        // get all of the messages for this event in the database
+        // get all of the messages for this place in the database
         // for testing we will use localStorage
         const messageData = this._getLocalStorage_Messages();
 
@@ -97,7 +97,7 @@ export default class Chat {
         let lastAuthor;
         return messageData.map(data => {
             const newMessage = new Message(
-                data.event,
+                data.place,
                 data.content,
                 data.author,
                 lastAuthor?.id == data.author.id,
@@ -113,8 +113,8 @@ export default class Chat {
     }
 
     _getLocalStorage_Messages() {
-        // get the message IDs for this event from localStorage
-        const messageIDsString = localStorage.getItem(`${this.event}_messages`) ?? "[]";
+        // get the message IDs for this place from localStorage
+        const messageIDsString = localStorage.getItem(`${this.place}_messages`) ?? "[]";
         const messageIDs = JSON.parse(messageIDsString);
         // return the data in localStorage for each message
         return messageIDs.map(id => JSON.parse(localStorage.getItem(id)))

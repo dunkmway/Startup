@@ -1,5 +1,5 @@
 const privatePages = [
-    'new-event.html',
+    'new-place.html',
     'profile.html'
 ]
 
