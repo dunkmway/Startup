@@ -51,5 +51,6 @@ form {
     border: none;
     border-radius: 0.5em;
     font-family: 'Roboto', sans-serif;
+    resize: vertical;
 }
   

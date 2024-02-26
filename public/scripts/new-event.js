@@ -81,8 +81,6 @@ async function submit(event, eventID) {
         id: eventID,
         name: formData.get('name'),
         description: formData.get('description'),
-        start: formData.get('start'),
-        end: formData.get('end'),
         bounds: map.getBounds(),
         creator: getCurrentUser()
     }
@@ -90,8 +88,6 @@ async function submit(event, eventID) {
     if (
         !data.name ||
         !data.description ||
-        !data.start ||
-        !data.end ||
         !data.bounds
     ) {
         alert('Please fill out all fields.')
