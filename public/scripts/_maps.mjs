@@ -152,6 +152,102 @@ export class Bounds {
         this.west <= lng
     }
 
+    distanceFrom(lat, lng) {
+        if (this.contains(lat, lng)) return 0;
+
+        const { lat: closeLat, lng: closeLng } = this.closestPointTo(lat, lng);
+        return this._distance(closeLat, closeLng, lat, lng);
+    }
+
+    angleFrom(lat, lng) {
+        if (this.contains(lat, lng)) return null;
+
+        const { lat: closeLat, lng: closeLng } = this.closestPointTo(lat, lng);
+        return this._fromBearingToDeg(this._bearing(lat, lng, closeLat, closeLng));
+    }
+
+    directionFromDegree(degree) {
+        if (degree == null) return null;
+
+        const directions = ['E', 'ENE', 'NE', 'NNE', 'N', 'NNW', 'NW', 'WNW', 'W', 'WSW', 'SW', 'SSW', 'S', 'SSE', 'SE', 'ESE'];
+        const index = Math.round(degree / 22.5) % 16;
+        return directions[index];
+    }
+
+    closestPointTo(lat, lng) {
+        // check if inline with bounds
+        let closeLat, closeLng
+        if (lat < this.north && lat > this.south) {
+            closeLat = lat;
+        }
+        if (lng < this.east && lat > this.west) {
+            closeLng = lng;
+        }
+
+        // if we weren't inline then we are at a corner
+        if (!closeLat) {
+            closeLat = (Math.abs(lat - this.north) < Math.abs(lat - this.south)) ? this.north : this.south;
+        }
+        if (!closeLng) {
+            closeLng = (Math.abs(lng - this.east) < Math.abs(lng - this.west)) ? this.east : this.west;
+        }
+        return {
+            lat: closeLat,
+            lng: closeLng
+        }
+    }
+
+    _distance(lat1, lng1, lat2, lng2) {
+        const earthRadiusKm = 6371;
+        const dLat = this._toRadians(lat2 - lat1);
+        const dLng = this._toRadians(lng2 - lng1);
+
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(this._toRadians(lat1)) * Math.cos(this._toRadians(lat2)) *
+                  Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        const distance = earthRadiusKm * c;
+        return this._toMiles(distance);
+    }
+
+    _bearing(lat1, lng1, lat2, lng2) {
+        // convert to radians
+        lat1 = this._toRadians(lat1);
+        lng1 = this._toRadians(lng1);
+        lat2 = this._toRadians(lat2);
+        lng2 = this._toRadians(lng2);
+
+        // calcultion
+        const deltaLng = lng2 - lng1;
+        const X = Math.cos(lat2) * Math.sin(deltaLng);
+        const Y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLng);
+        return this._toDegrees(Math.atan2(X, Y)) % 360;
+    }
+
+    _toRadians(degrees) {
+        return degrees * Math.PI / 180;
+    }
+
+    _toDegrees(radians) {
+        return radians * 180 / Math.PI;
+    }
+
+    _toMiles(kilometers) {
+        const milesConversion = 0.621371;
+        return kilometers * milesConversion;
+    }
+
+    _toKilometers(miles) {
+        const kmConversion = 1.60934;
+        return miles * kmConversion;
+    }
+
+    _fromBearingToDeg(bearing) {
+        return (90 - bearing) % 360;
+    }
+
     /**
      * Determine if the bounds is within a certain radius of the origin latitude and origin longitude
      * @param {Number} originLat in degrees
@@ -161,7 +257,7 @@ export class Bounds {
      */
     isWithinRadius(originLat, originLng, radius) {
         const { lat, lng } = this.center();
-        return Math.sqrt(Math.pow(lat - originLat, 2) + Math.pow(lng - originLng, 2)) <= radius / 69;
+        return this._distance(lat, lng, originLat, originLng) <= radius / 69;
     }
 
     static fromCorners(corners) {

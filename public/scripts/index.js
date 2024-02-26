@@ -34,7 +34,7 @@ async function setupTestData() {
             description: 'This is an example place. You must be at the stadium to chat!',
             creator: {
                 id: 'demo-user-1',
-                username: 'Duncan'
+                username: 'duncan'
             },
             bounds: {
                 north: 40.25873092924582,

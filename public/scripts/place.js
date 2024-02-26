@@ -49,7 +49,7 @@ async function initialize() {
     const mapWrapper = document.getElementById('map');
     const bounds = new Bounds(place.bounds);
     new GoogleMap(mapWrapper, bounds.center(), bounds).enableMovement();
-    document.querySelector('#placeDetails > p').textContent = place.description;
+    document.querySelector('#placeDetails .description > p').textContent = place.description;
 }
 
 function checkForLocation(place, chat) {
@@ -67,6 +67,21 @@ function locationFound(pos, place, chat) {
     } else {
         chat.makePublic();
         document.querySelector('#user-input > textarea').disabled = true;
+    }
+
+    // show the bearing and distance
+    const distance = bounds.distanceFrom(pos.coords.latitude, pos.coords.longitude);
+    const angle = bounds.angleFrom(pos.coords.latitude, pos.coords.longitude);
+    const direction = bounds.directionFromDegree(angle);
+
+    if (distance != 0) {
+        document.getElementById('distance').textContent = `${Math.round(distance * 100) / 100} mi`;
+        document.getElementById('direction').textContent = direction;
+        document.getElementById('compass').style.setProperty('--rotation', `${-angle}deg`);
+    } else {
+        document.getElementById('distance').textContent = '0 mi';
+        document.getElementById('direction').textContent = 'You are here!';
+        document.getElementById('compass').style.setProperty('--rotation', `${-90}deg`);
     }
 
     // TESTING start running random messages
