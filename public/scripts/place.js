@@ -4,6 +4,7 @@ import { getCurrentUser } from './_auth.mjs';
 import Place from './_Place.mjs';
 import { Bounds } from './_maps.mjs';
 import { GoogleMap } from './_maps.mjs';
+import { getDoc } from './_database.mjs';
 
 const MIN_RANDOM_MILLIS = 5000;
 const MAX_RANDOM_MILLIS = 15000;
@@ -26,14 +27,16 @@ initialize();
 
 async function initialize() {
     // load the place
-    const place = new Place(PLACE_ID);
-    await place.load();
+    const placeDoc = await getDoc(PLACE_ID);
+    const place = new Place(placeDoc);
 
     const chat = new Chat(
         PLACE_ID,
         CURRENT_USER,
         chatContainer
     );
+    await chat.loadMessages();
+    chat.makePublic();
     document.getElementById('user-input').addEventListener('submit', (ev) => messageSubmit(ev, chat));
 
     // get the current location
@@ -57,7 +60,7 @@ function checkForLocation(place, chat) {
 function locationFound(pos, place, chat) {
     const bounds = new Bounds(place.bounds);
     // if the current position is within the bounds
-    if (bounds.contains(pos.coords.latitude, pos.coords.longitude)) {
+    if (bounds.contains(pos.coords.latitude, pos.coords.longitude) && CURRENT_USER) {
         // within bounds
         chat.makePrivate();
         document.querySelector('#user-input > textarea').disabled = false;
@@ -166,38 +169,28 @@ const randomMessages = [
     "Normal activities took extraordinary amounts of concentration at the high altitude.",
     "I'm confused: when people ask me what's up, and I point, they groan.",
     "Excitement replaced fear until the final moment.",
-    "The crowd yells and screams for more memes.",
-    `───▄▀▀▀▄▄▄▄▄▄▄▀▀▀▄───
-───█▒▒░░░░░░░░░▒▒█───
-────█░░█░░░░░█░░█────
-─▄▄──█░░░▀█▀░░░█──▄▄─
-█░░█─▀▄░░░░░░░▄▀─█░░█
-█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█
-█░░╦─╦╔╗╦─╔╗╔╗╔╦╗╔╗░░█
-█░░║║║╠─║─║─║║║║║╠─░░█
-█░░╚╩╝╚╝╚╝╚╝╚╝╩─╩╚╝░░█
-█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█`
+    "The crowd yells and screams for more memes."
 ];
 
 const randomUsers = [
     {
         id: "14a0cb61-e65b-4718-a4f6-684da4fac6c9",
-        name:  "Wren Clements"
+        username:  "Wren Clements"
     },
     {
         id: "e9ddd4ec-8f86-487d-8c43-97f90a93642d",
-        name:  "Fisher Hart"
+        username:  "Fisher Hart"
     },
     {
         id: "218c0e09-4b31-4979-8c78-6d278c4c43bb" ,
-        name:  "Gemma Schmidt"
+        username:  "Gemma Schmidt"
     },
     {
         id: "c6e363c1-a735-4e32-ad42-756c3de7878c",
-        name:  "Zayden Alvarado"
+        username:  "Zayden Alvarado"
     },
     {
         id: "3db54d11-5319-45cd-87f7-ecc50bee5807",
-        name:  "Blake Hickman"
+        username:  "Blake Hickman"
     },
 ];

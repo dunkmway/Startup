@@ -1,6 +1,6 @@
 import { getCurrentUser } from "./_auth.mjs";
 import { GoogleMap, Bounds } from "./_maps.mjs"
-import { arrayRemove } from "./_helpers.mjs";
+import { deleteDoc, getDoc, saveDoc } from "./_database.mjs";
 
 const LOCATION_OPTIONS = {
     timeout: 5000,
@@ -16,7 +16,8 @@ async function initialize() {
     if (QUERY_PARAMS.get('e')) {
         // edit
         placeID = QUERY_PARAMS.get('e');
-        const data = await getPlaceFromDatabase(placeID);
+        const placeDoc = await getDoc(placeID);
+        const data = placeDoc.data;
         if (!data) {
             location.href = 'new-place.html'
             return;
@@ -67,9 +68,9 @@ function locationNotFound(err) {
     map.enableEdit();
 }
 
-function deletePlace(placeData) {
-    deletePlaceFromDatabase(placeData);
-    location.href = `profile.html`
+async function deletePlace(placeID) {
+    await deleteDoc('places', placeID);
+    location.href = `profile.html`;
 }
 
 async function submit(event, placeID) {
@@ -78,7 +79,6 @@ async function submit(event, placeID) {
     const formData = new FormData(target);
 
     const data = {
-        id: placeID,
         name: formData.get('name'),
         description: formData.get('description'),
         bounds: map.getBounds(),
@@ -94,52 +94,8 @@ async function submit(event, placeID) {
         return;
     }
 
-    await savePlaceToDatabase(data);
+    await saveDoc('places', placeID, data);
     location.href = `profile.html`
-}
-
-async function getPlaceFromDatabase(placeID) {
-    const dataString = localStorage.getItem(placeID);
-    if (!dataString) return null;
-    return JSON.parse(dataString);
-}
-
-async function savePlaceToDatabase(data) {
-    // save the place
-    localStorage.setItem(data.id, JSON.stringify(data));
-
-    // update the places association
-    const palceIDsString = localStorage.getItem('places') ?? "[]";
-    let placeIDs = JSON.parse(palceIDsString);
-    if (!placeIDs.includes(data.id)) {
-        placeIDs.push(data.id);
-    }
-    localStorage.setItem('places', JSON.stringify(placeIDs));
-
-    // update the user_places association
-    const usersIDsString = localStorage.getItem(`${data.creator.id}_places`) ?? "[]";
-    let user_placeIDs = JSON.parse(usersIDsString);
-    if (!user_placeIDs.includes(data.id)) {
-        user_placeIDs.push(data.id);
-    }
-    localStorage.setItem(`${data.creator.id}_places`, JSON.stringify(user_placeIDs));
-}
-
-async function deletePlaceFromDatabase(data) {
-    // delete the place
-    localStorage.removeItem(data.id);
-
-    // update the places association
-    const placeIDsString = localStorage.getItem('places') ?? "[]";
-    let placeIDs = JSON.parse(placeIDsString);
-    arrayRemove(placeIDs, data.id);
-    localStorage.setItem('places', JSON.stringify(placeIDs));
-
-    // update the user_places association
-    const usersIDsString = localStorage.getItem(`${data.creator.id}_places`) ?? "[]";
-    let user_placeIDs = JSON.parse(usersIDsString);
-    arrayRemove(user_placeIDs, data.id);
-    localStorage.setItem(`${data.creator.id}_places`, JSON.stringify(user_placeIDs));
 }
 
 initialize();

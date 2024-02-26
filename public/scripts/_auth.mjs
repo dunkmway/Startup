@@ -1,3 +1,6 @@
+import { getDoc } from "./_database.mjs";
+import { removeAllChildNodes } from "./_helpers.mjs";
+
 const privatePages = [
     'new-place.html',
     'profile.html'
@@ -31,6 +34,7 @@ function checkAuth() {
 function renderHeader() {
     const menu = document.querySelector('header menu');
     if (!menu) return;
+    removeAllChildNodes(menu);
 
     const user = getCurrentUser();
     if (user) {
@@ -53,12 +57,22 @@ function renderHeader() {
 }
 
 export function getCurrentUser() {
-    const userString = localStorage.getItem('user');
+    const userString = localStorage.getItem('current_user');
     return userString && JSON.parse(userString);
 }
 
+export async function setCurrentUser(id) {
+    const userDoc = await getDoc(id);
+    const currentUser = {
+        id,
+        username: userDoc.data.username
+    }
+    localStorage.setItem('current_user', JSON.stringify(currentUser));
+    return currentUser;
+}
+
 function signOutUser() {
-    localStorage.removeItem('user');
+    localStorage.removeItem('current_user');
     checkAuth();
     renderHeader();
 }

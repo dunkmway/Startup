@@ -1,4 +1,5 @@
 import Message from "./_Message.mjs";
+import { where, query } from "./_database.mjs";
 import { removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Chat {
@@ -7,10 +8,6 @@ export default class Chat {
         this.container = container;
         this.user = user;
         this.isPublic = isPublic;
-
-        this.messages = this._getDatabaseMessages();
-
-        this._render(true);
     }
 
     // used to add a message from the current user
@@ -88,36 +85,29 @@ export default class Chat {
         });
     }
 
-    _getDatabaseMessages() {
+    async loadMessages() {
         // get all of the messages for this place in the database
-        // for testing we will use localStorage
-        const messageData = this._getLocalStorage_Messages();
+        const messageDocs = await query('messages', where('place', '==', this.place));
+
 
         // convert the database data to message objects
         let lastAuthor;
-        return messageData.map(data => {
+        return this.messages = messageDocs.map(doc => {
+            const data = doc.data
             const newMessage = new Message(
                 data.place,
                 data.content,
                 data.author,
                 lastAuthor?.id == data.author.id,
-                data.author.id == this.user.id,
+                data.author.id == this.user?.id,
                 data.isPublic, 
                 data.createdAt,
-                data.id
+                doc.id
             );
 
             lastAuthor = data.author;
             return newMessage;
         })
-    }
-
-    _getLocalStorage_Messages() {
-        // get the message IDs for this place from localStorage
-        const messageIDsString = localStorage.getItem(`${this.place}_messages`) ?? "[]";
-        const messageIDs = JSON.parse(messageIDsString);
-        // return the data in localStorage for each message
-        return messageIDs.map(id => JSON.parse(localStorage.getItem(id)))
     }
 
     // help to determine if the author for an upcoming message isSame

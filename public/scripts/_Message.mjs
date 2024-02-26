@@ -1,3 +1,4 @@
+import { saveDoc } from "./_database.mjs";
 import { getRandomIndex, removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Message {
@@ -11,37 +12,21 @@ export default class Message {
         this.createdAt = createdAt ?? new Date().getTime();     // when the message was created
         this.id = id ?? self.crypto.randomUUID();               // uuid of the message
         this.element = null;                                    // html element of the message
+        this.randomContent = randomizeText(this.content);       // randomized text content of the message
 
     }
 
+    // save this message to the database
     async save() {
-        // save this message to the database
-        // for testing purposes we will save it to localstorage
-        this._save_localStorage();
-    }
-
-    _save_localStorage() {
-        // we don't want to save the element
+        // make a copy without the event or id to save
         const clone = {
             place: this.place,
             content: this.content,
             author: this.author,
-            isSame: this.isSame,
-            isOwner: this.isOwner,
             isPublic: this.isPublic,
             createdAt: this.createdAt,
-            id: this.id
         };
-        // save the message
-        localStorage.setItem(clone.id, JSON.stringify(clone));
-
-        // update the place_messages association
-        const messageIDsString = localStorage.getItem(`${clone.place}_messages`) ?? "[]";
-        let messageIDs = JSON.parse(messageIDsString);
-        if (!messageIDs.includes(clone.id)) {
-            messageIDs.push(clone.id);
-        }
-        localStorage.setItem(`${clone.place}_messages`, JSON.stringify(messageIDs));
+        await saveDoc('messages', this.id, clone);
     }
 
     renderPublic(container) {
@@ -64,13 +49,13 @@ export default class Message {
         removeAllChildNodes(this.element);
         const author = document.createElement('p');
         author.className = 'author';
-        author.textContent = this.author.name;
+        author.textContent = this.author.username;
         this.element.appendChild(author);
 
         const isHidden = !this.isOwner && isPublicRendering && !this.isPublic;
         const message = document.createElement('pre');
         message.classList.add('message');
-        message.textContent = isHidden ? randomizeText(this.content) : this.content;
+        message.textContent = isHidden ? this.randomContent : this.content;
         this.element.appendChild(message);
         
         this.element.classList.add(this.isOwner ? 'right' : 'left');

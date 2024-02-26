@@ -1,5 +1,6 @@
 import "./_auth.mjs";
-import { getManyFromDatabase } from "./_helpers.mjs";
+import { setCurrentUser } from "./_auth.mjs";
+import { query, saveDoc, where } from "./_database.mjs";
 
 const INITIAL = 0;
 const CREATE = 1;
@@ -20,7 +21,8 @@ async function handleFormSubmit(event) {
         case INITIAL:
             if (username) {
                 // we have the user name so check if a user exists with that name
-                const foundUser = await getUserFromUsername(username);
+                const userDocs = await query('users', where('username', '==', username))
+                const foundUser = userDocs.length == 1 && userDocs[0];
                 if (foundUser) {
                     // continue to login
                     setLogin();
@@ -106,42 +108,26 @@ async function signup(username, password) {
         password
     }
     // save the new user
-    localStorage.setItem(id, JSON.stringify(data));
-    // update the users array
-    const usersString = localStorage.getItem(`users`) ?? "[]";
-    let userIDs = JSON.parse(usersString);
-    if (!userIDs.includes(id)) {
-        userIDs.push(id);
-    }
-    localStorage.setItem(`users`, JSON.stringify(userIDs));
+    await saveDoc('users', id, data);
 
     // set the currentUser
-    localStorage.setItem('user', JSON.stringify({
-        id,
-        username
-    }))
+    setCurrentUser(id);
     location.replace('profile.html');
 
     return true;
 }
 
 async function login(username, password) {
-    const user = await getUserFromUsername(username);
-    if (user && user.password == password) {
-        // set the currentUser
-        localStorage.setItem('user', JSON.stringify({
-            id: user.id,
-            username
-        }))
-        location.replace('profile.html');
-        return true;
-    } else {
-        return false;
-    }
-}
+    const userDocs = await query('users',
+        where('username', '==', username),
+        where('password', '==', password)
+    )
 
-// TESTING: super unsecure
-async function getUserFromUsername(username) {
-    const users = await getManyFromDatabase('user');
-    return users.find(user => user.username == username);
+    if (userDocs.length == 1) {
+        await setCurrentUser(userDocs[0].id);
+        location.replace('profile.html');
+        return true
+    } else {
+        return false
+    }
 }

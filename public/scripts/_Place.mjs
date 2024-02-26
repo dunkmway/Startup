@@ -1,17 +1,9 @@
 import { GoogleMap, Bounds } from "./_maps.mjs"
 
 export default class Place {
-    constructor(id) {
-        this.id = id;
-    }
-
-    async load() {
-        const dataString = localStorage.getItem(this.id);
-        if (!dataString) return null;
-
-        const data = JSON.parse(dataString);
-        Object.assign(this, data);
-        return this;
+    constructor(doc) {
+        this.id = doc.id;
+        Object.assign(this, doc.data);
     }
 
     render(container, onclick, btnMsg) {
@@ -25,7 +17,7 @@ export default class Place {
             <div class="body">
                 <div class="header">
                     <h3>${this.name}</h3>
-                    <p class="countdown"></p>
+                    <p class="creator">${this.creator.username}</p>
                 </div>
                 <p>${this.description}</p>
             </div>
