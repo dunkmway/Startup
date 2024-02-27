@@ -64,3 +64,12 @@ For this deliverable I properly styled the application into its final appearance
   - Application elements - Used good contrast and whitespace
   - Application text content - Consistent fonts
   - Application images - Demo images are properly used and sized.
+
+## JavaScript deliverable
+
+For this deliverable I implemented by JavaScript so that the application works for a multiple users using the same browser (localhost). I also added placeholders for future technology.
+
+- **login** - You can sign up and login which will send you to the profile page.
+- **database** - Create places, messages, and users. Be able to display this information on appropriate pages. Currently this is stored and retrieved from local storage, but it will be replaced with the database data later.
+- **WebSocket** - I used the setInterval function to periodically send a chat message in every place. This will be replaced with WebSocket messages later.
+- **application logic** - Page to allow for creating a place and setting it's bounds on a google map, name, and description. User can send in messages while signed in and at a physical location.
