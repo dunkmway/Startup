@@ -11,14 +11,13 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Router for service endpoints
-var apiRouter = express.Router();
-app.use(`/api`, apiRouter);
+app.use(`/api`, require('./src/hello.js'));
 
 
 
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
-  res.sendFile('index.html', { root: 'public' });
+  res.redirect('/');
 });
 
 app.listen(port, () => {
