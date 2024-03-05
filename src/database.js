@@ -11,19 +11,15 @@ router.get('/database', (req, res) => {
 // restart the database for testing purposes
 router.get('/database/restart', (req, res) => {
     DATABASE = {};
-    res.sendStatus(200);
+    res.status(200);
 });
 
 // query database
 router.get('/database/:collection/:doc?', (req, res) => {
     const { collection, doc } = req.params;
-    if (!collection) {
-        res.sendStatus(400).send('collection is required');
-        return;
-    }
 
     if (doc) {
-        res.send(DATABASE[collection]?.[doc] ?? {});
+        res.status(200).send(DATABASE[collection]?.[doc] ?? false);
     } else {
         const queries = Object.keys(req.query)
         .map(key => {
@@ -41,10 +37,7 @@ router.get('/database/:collection/:doc?', (req, res) => {
 // save doc
 router.post('/database/:collection/:doc?', (req, res) => {
     let { collection, doc } = req.params;
-    if (!collection) {
-        res.sendStatus(400);
-        return;
-    }
+
     if (DATABASE[collection] == null) {
         DATABASE[collection] = {};
     }
@@ -67,14 +60,7 @@ router.post('/database/:collection/:doc?', (req, res) => {
 // delete doc
 router.delete('/database/:collection/:doc', (req, res) => {
     const { collection, doc } = req.params;
-    if (!collection) {
-        res.sendStatus(400).send('collection is required');
-        return;
-    }
-    if (!doc) {
-        res.sendStatus(400).send('doc is required');
-        return;
-    }
+
     delete DATABASE[collection][doc];
     res.send({
         id: doc,

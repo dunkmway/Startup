@@ -92,7 +92,8 @@ export default class Chat {
 
         // convert the database data to message objects
         let lastAuthor;
-        return this.messages = messageDocs.map(doc => {
+        return this.messages = messageDocs
+        .map(doc => {
             const data = doc.data
             const newMessage = new Message(
                 data.place,
@@ -108,6 +109,7 @@ export default class Chat {
             lastAuthor = data.author;
             return newMessage;
         })
+        .sort((a,b) => a.createdAt - b.createdAt)
     }
 
     // help to determine if the author for an upcoming message isSame

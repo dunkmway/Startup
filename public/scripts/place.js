@@ -28,6 +28,10 @@ initialize();
 async function initialize() {
     // load the place
     const placeDoc = await getDoc('places', PLACE_ID);
+    if (!placeDoc) {
+        window.location.replace('index.html');
+        return;
+    }
     const place = new Place(placeDoc);
 
     const chat = new Chat(
