@@ -107,10 +107,10 @@ async function signup(username, password) {
         password
     }
     // save the new user
-    await saveDoc('users', null, data);
+    const userDoc = await saveDoc('users', null, data);
 
     // set the currentUser
-    setCurrentUser(id);
+    await setCurrentUser(userDoc.id);
     location.replace('profile.html');
 
     return true;

@@ -25,7 +25,7 @@ export async function deleteDoc(collection, id) {
 export async function query(collection, ...conditions) {
     let path = `/api/database/${collection}?`;
     for (const query of conditions) {
-        path += query;
+        path += query + '&';
     }
     const response = await fetch(path);
     const data =  await response.json();
