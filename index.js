@@ -12,8 +12,11 @@ app.use(express.static('public'));
 
 // Router for service endpoints
 app.use(`/api`, require('./src/hello.js'));
+app.use(`/api`, require('./src/database.js'));
 
-
+app.use('/api/*', (req, res) => {
+    res.sendStatus(404);
+})
 
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {

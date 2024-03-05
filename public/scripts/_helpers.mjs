@@ -12,6 +12,7 @@ export function restartJavascriptDeliverable() {
   const confirmation = confirm('Are you sure you want to restart the entire Javascript Deliverable? This will delete the entire testing database.')
   if (confirmation) {
     localStorage.clear();
+    fetch('/api/database/restart')
     window.location.replace('index.html');
   }
 }

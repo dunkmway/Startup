@@ -27,7 +27,7 @@ initialize();
 
 async function initialize() {
     // load the place
-    const placeDoc = await getDoc(PLACE_ID);
+    const placeDoc = await getDoc('places', PLACE_ID);
     const place = new Place(placeDoc);
 
     const chat = new Chat(

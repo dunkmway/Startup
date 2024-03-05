@@ -62,7 +62,7 @@ export function getCurrentUser() {
 }
 
 export async function setCurrentUser(id) {
-    const userDoc = await getDoc(id);
+    const userDoc = await getDoc('users', id);
     const currentUser = {
         id,
         username: userDoc.data.username

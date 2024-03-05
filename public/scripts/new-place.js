@@ -16,7 +16,7 @@ async function initialize() {
     if (QUERY_PARAMS.get('e')) {
         // edit
         placeID = QUERY_PARAMS.get('e');
-        const placeDoc = await getDoc(placeID);
+        const placeDoc = await getDoc('places', placeID);
         const data = placeDoc.data;
         if (!data) {
             location.href = 'new-place.html'
@@ -38,7 +38,7 @@ async function initialize() {
 
     } else {
         // new
-        placeID = self.crypto.randomUUID();
+        placeID = null;
 
         // get the current location and initialize the map
         navigator.geolocation.getCurrentPosition(locationFound, locationNotFound, LOCATION_OPTIONS);

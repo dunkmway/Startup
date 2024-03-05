@@ -102,13 +102,12 @@ function handleError(errorMsg) {
 }
 
 async function signup(username, password) {
-    const id = self.crypto.randomUUID();
     const data = {
         username,
         password
     }
     // save the new user
-    await saveDoc('users', id, data);
+    await saveDoc('users', null, data);
 
     // set the currentUser
     setCurrentUser(id);

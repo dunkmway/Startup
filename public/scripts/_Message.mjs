@@ -10,7 +10,7 @@ export default class Message {
         this.isOwner = isOwner;                                 // whether or not the chat user is the message owner
         this.isPublic = isPublic;                               // whether or not the message is public
         this.createdAt = createdAt ?? new Date().getTime();     // when the message was created
-        this.id = id ?? self.crypto.randomUUID();               // uuid of the message
+        this.id = id;                                           // uuid of the message
         this.element = null;                                    // html element of the message
         this.randomContent = randomizeText(this.content);       // randomized text content of the message
 
