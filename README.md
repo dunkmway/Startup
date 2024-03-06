@@ -73,3 +73,13 @@ For this deliverable I implemented by JavaScript so that the application works f
 - **database** - Create places, messages, and users. Be able to display this information on appropriate pages. Currently this is stored and retrieved from local storage, but it will be replaced with the database data later.
 - **WebSocket** - I used the setInterval function to periodically send a chat message in every place. This will be replaced with WebSocket messages later.
 - **application logic** - Page to allow for creating a place and setting it's bounds on a google map, name, and description. User can send in messages while signed in and at a physical location.
+
+## Service deliverable
+
+For this deliverable I added backend endpoints to store all data in localstorage now in the server memory. The goals is to turn this into database endpoints when we implement the databse.
+
+- **Node.js/Express HTTP service** - done!
+- **Static middleware for frontend** - done!
+- **Calls to third party endpoints** - Using dad jokes api to get random user messages in the chats.
+- **Backend service endpoints** - Endpoints to perform basic database functionality.
+- **Frontend calls service endpoints** - I did this using the fetch function.
