@@ -1,5 +1,5 @@
 export async function saveDoc(collection, id, data) {
-    const url = id ? `/api/database/${collection}/${id}` : `/api/database/${collection}`; 
+    const url = id ? `/api/database/${collection}/${id}` : `/api/database/${collection}`;
     const response = await fetch(url, {
         method: "POST",
         headers: {
