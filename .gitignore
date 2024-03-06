@@ -1,2 +1,3 @@
 customDeploy.sh
 node_modules
+dist
