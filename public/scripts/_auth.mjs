@@ -71,7 +71,7 @@ export async function setCurrentUser(id) {
     return currentUser;
 }
 
-function signOutUser() {
+export function signOutUser() {
     localStorage.removeItem('current_user');
     checkAuth();
     renderHeader();

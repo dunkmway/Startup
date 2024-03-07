@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Router for service endpoints
+app.disable('etag');
 app.use(`/api`, require('./src/hello.js'));
 app.use(`/api`, require('./src/database.js'));
 

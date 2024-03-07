@@ -1,26 +1,41 @@
 const express = require('express');
 const crypto = require('crypto');
 const router = express.Router();
+const security = require('./security.js');
 
-let DATABASE = {};
+global.db = {};
 
 // get the whole database for testing purposes
 router.get('/database', (req, res) => {
-    res.send(DATABASE);
+    res.status(200).send(global.db);
 });
 
 // restart the database for testing purposes
 router.get('/database/restart', (req, res) => {
-    DATABASE = {};
-    res.status(200);
+    global.db = {};
+    res.sendStatus(200);
 });
 
 // query database
-router.get('/database/:collection/:doc?', (req, res) => {
+router.get('/database/:collection/:doc?', async (req, res) => {
     const { collection, doc } = req.params;
+    const user = req.headers['user'];
 
     if (doc) {
-        res.status(200).send(DATABASE[collection]?.[doc] ?? false);
+        if (global.db[collection]?.[doc] == null) {
+            res.send({
+                id: doc,
+                collection,
+                data: null
+            });
+        } else {
+            const singleCheck = await security.check(security.READ, collection, doc, user);
+            if (!singleCheck) {
+                res.sendStatus(403);
+                return;
+            }
+            res.status(200).send(global.db[collection][doc]);
+        }
     } else {
         const queries = Object.keys(req.query)
         .map(key => {
@@ -30,17 +45,30 @@ router.get('/database/:collection/:doc?', (req, res) => {
                 req.query[key].split('_')[1]
             )
         });
-        const result = query(DATABASE[collection] ?? {}, ...queries);
+        const result = await query(collection, user, ...queries);
         res.send(result);
     }
 });
 
 // save doc
-router.post('/database/:collection/:doc?', (req, res) => {
+router.post('/database/:collection/:doc?', async (req, res) => {
     let { collection, doc } = req.params;
+    const user = req.headers['user'];
+    
+    const check = await security.check(
+        global.db[collection]?.[doc] ? security.UPDATE : security.CREATE,
+        collection,
+        doc,
+        user,
+        req.body
+    );
+    if (!check) {
+        res.sendStatus(403);
+        return;
+    }
 
-    if (DATABASE[collection] == null) {
-        DATABASE[collection] = {};
+    if (global.db[collection] == null) {
+        global.db[collection] = {};
     }
 
     if (!doc) {
@@ -53,32 +81,43 @@ router.post('/database/:collection/:doc?', (req, res) => {
         data: req.body
     }
 
-    DATABASE[collection][doc] = entry;
+    global.db[collection][doc] = entry;
 
     res.send(entry);
 });
 
 // delete doc
-router.delete('/database/:collection/:doc', (req, res) => {
+router.delete('/database/:collection/:doc', async (req, res) => {
     const { collection, doc } = req.params;
+    const user = req.headers['user'];
 
-    delete DATABASE[collection][doc];
+    const check = await security.check(security.DELETE, collection, doc, user);
+    if (!check) {
+        res.sendStatus(403);
+        return;
+    }
+
+    delete global.db[collection][doc];
     res.send({
         id: doc,
         collection
     });
 });
 
-function query(collectionDocs, ...conditions) {
-    if (conditions.length == 0) {
-        return collectionDocs;
-    }
+async function query(collection, user, ...conditions) {
+    const collectionDocs = global.db[collection] ?? {}
     const queryResult = {};
 
     for (const docID in collectionDocs) {
         const doc = collectionDocs[docID];
-        for (const condition of conditions) {
-            if (condition(doc)) {
+        if (await security.check(security.READ, collection, docID, user)) {
+            if (conditions.length > 0) {
+                for (const condition of conditions) {
+                    if (condition(doc)) {
+                        queryResult[docID] = doc;
+                    }
+                }
+            } else {
                 queryResult[docID] = doc;
             }
         }
