@@ -14,6 +14,7 @@ app.use(express.static('public'));
 app.disable('etag');
 app.use(`/api`, require('./src/hello.js'));
 app.use(`/api`, require('./src/database.js'));
+app.use(`/api`, require('./src/mongodb.js'));
 
 app.use('/api/*', (req, res) => {
     res.sendStatus(404);

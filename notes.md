@@ -21,6 +21,9 @@ I also added in a public folder in my own source directory to clean things up so
 
 ./customDeploy.sh -s [service]
 
+maybe a solution for env vars
+env $(cat .env) pm2 start ...
+
 
 ## Home page
 Handling time is too much
