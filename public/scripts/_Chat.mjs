@@ -87,14 +87,13 @@ export default class Chat {
 
     async loadMessages() {
         // get all of the messages for this place in the database
-        const messageDocs = await query('messages', where('place', '==', this.place));
-
+        const messageDocs = await query('messages', where('place', '$eq', this.place));
 
         // convert the database data to message objects
         let lastAuthor;
         return this.messages = messageDocs
         .map(doc => {
-            const data = doc.data
+            const data = doc
             const newMessage = new Message(
                 data.place,
                 data.content,

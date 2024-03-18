@@ -1,8 +1,5 @@
 require('dotenv').config();
 
-const express = require('express');
-const router = express.Router();
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOSTNAME}/?retryWrites=true&w=majority&appName=Startup260Cluster`;
 
@@ -14,20 +11,17 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+// set the database
+const db = client.db('startup');
 
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
+// This will asynchronously test the connection and exit the process if it fails
+(async function testConnection() {
+  await client.connect();
+  await db.command({ ping: 1 });
+})().catch((ex) => {
+  console.log(`Unable to connect to database with ${uri} because ${ex.message}`);
+  process.exit(1);
+});
 
-module.exports = router;
+module.exports = db;
 

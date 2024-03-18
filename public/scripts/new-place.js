@@ -17,22 +17,21 @@ async function initialize() {
         // edit
         placeID = QUERY_PARAMS.get('e');
         const placeDoc = await getDoc('places', placeID);
-        const data = placeDoc.data;
-        if (!data) {
+        if (!placeDoc) {
             location.href = 'new-place.html'
             return;
         }
 
         // fill in the existing data
-        fillInData(data);
+        fillInData(placeDoc);
 
         // show the delete button
         const deleteBtn = document.getElementById('delete');
         deleteBtn.style.display = 'block';
-        deleteBtn.addEventListener('click', () =>  deletePlace(data));
+        deleteBtn.addEventListener('click', () =>  deletePlace(placeDoc));
 
         // initialize the map with the existing bounds
-        const bounds = new Bounds(data.bounds);
+        const bounds = new Bounds(placeDoc.bounds);
         map = new GoogleMap(document.getElementById('map'), bounds.center(), bounds);
         map.enableEdit();
 

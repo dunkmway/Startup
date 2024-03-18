@@ -43,16 +43,7 @@ export async function query(collection, ...conditions) {
     const response = await fetch(path, {
         headers: addUserHeader()
     });
-    const data =  await response.json();
-    const array = [];
-    for (const docID in data) {
-        array.push({
-            id: docID,
-            collection: data[docID].collection,
-            data: data[docID].data
-        })
-    }
-    return array;
+    return await response.json();
 }
 
 export function where(field, operator, value) {

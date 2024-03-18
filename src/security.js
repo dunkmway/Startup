@@ -1,3 +1,5 @@
+const db = require('./mongodb.js');
+
 const CREATE = 0;
 const READ = 1;
 const UPDATE = 2;
@@ -10,7 +12,7 @@ const RULES = {
             action: [CREATE],
             rule: async (context) => {
                 return await context.user.exists() &&
-                context.incomingData?.creator?.id === context.user.id
+                (await context.new.data())?.creator?.id === context.user.id
             }
         },
         {
@@ -23,8 +25,8 @@ const RULES = {
             action: [UPDATE, DELETE],
             rule: async (context) => {
                 return await context.user.exists() &&
-                context.incomingData?.creator?.id === context.user.id &&
-                (await context.doc.data())?.creator?.id === context.user.id
+                (await context.new.data())?.creator?.id === context.user.id &&
+                (await context.old.data())?.creator?.id === context.user.id
             }
         }
     ],
@@ -39,7 +41,7 @@ const RULES = {
             action: [UPDATE, DELETE],
             rule: async (context) => {
                 return await context.user.exists() &&
-                context.user.id === context.doc.id
+                context.user.id === context.new.id
             }
         },
     ],
@@ -50,7 +52,7 @@ const RULES = {
             rule: async (context) => {
                 return true
                 // return await context.user.exists() &&
-                // context.incomingData?.author?.id === context.user.id
+                // (await context.new.data())?.author?.id === context.user.id
             }
         },
         {
@@ -63,8 +65,8 @@ const RULES = {
             action: [UPDATE, DELETE],
             rule: async (context) => {
                 return await context.user.exists() &&
-                context.incomingData?.author?.id === context.user.id &&
-                (await context.doc.data())?.author?.id === context.user.id
+                (await context.new.data())?.author?.id === context.user.id &&
+                (await context.old.data())?.author?.id === context.user.id
             }
         }
     ]
@@ -81,7 +83,7 @@ const RULES = {
  * @returns {Promise<Boolean>} is the operation authorized
  */
 async function check(action, collectionId, docId, userId, incomingData = null) {
-    docId = docId ?? '';
+    docId = docId ? docId.toString() : '';
 
     // get the rules for the collection
     const collectionRules = RULES[collectionId];
@@ -94,18 +96,18 @@ async function check(action, collectionId, docId, userId, incomingData = null) {
         // match the docId with Regex and action
         if (docId.match(match) && current.action.includes(action)) {
             const context = {
-                collection: {
-                    id: collectionId
-                },
-                doc: {
+                old: {
                     id: docId,
-                    data: async () => global.db[collectionId]?.[docId].data
+                    data: async () => await db.collection(collectionId).findOne({ _id: docId})
                 },
                 user: {
                     id: userId,
-                    exists: async () => global.db['users']?.[userId] != null 
+                    exists: async () => (await db.collection('users').findOne({ _id: userId})) != null
                 },
-                incomingData
+                new: {
+                    id: docId,
+                    data: async () => incomingData
+                }
             }
             return await current.rule(context);
         }

@@ -6,14 +6,14 @@ async function initialize() {
     const user = await getCurrentUser()
     const userPlaces = await query(
         'places',
-        where('creator.id', '==', user.id)
+        where('creator.id', '$eq', user.id)
     );
 
     userPlaces.forEach(async placeDoc => {
         const place = new Place(placeDoc);
         place.render(
             document.getElementById('places'),
-            () => location.href = `new-place.html?e=${placeDoc.id}`,
+            () => location.href = `new-place.html?e=${place.id}`,
             'Edit'
         )
     });

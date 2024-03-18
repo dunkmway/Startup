@@ -1,20 +1,7 @@
 const express = require('express');
-const crypto = require('crypto');
 const router = express.Router();
 const security = require('./security.js');
-
-global.db = {};
-
-// get the whole database for testing purposes
-router.get('/database', (req, res) => {
-    res.status(200).send(global.db);
-});
-
-// restart the database for testing purposes
-router.get('/database/restart', (req, res) => {
-    global.db = {};
-    res.sendStatus(200);
-});
+const db = require('./mongodb.js');
 
 // query database
 router.get('/database/:collection/:doc?', async (req, res) => {
@@ -22,30 +9,26 @@ router.get('/database/:collection/:doc?', async (req, res) => {
     const user = req.headers['user'];
 
     if (doc) {
-        if (global.db[collection]?.[doc] == null) {
-            res.send({
-                id: doc,
-                collection,
-                data: null
-            });
-        } else {
-            const singleCheck = await security.check(security.READ, collection, doc, user);
-            if (!singleCheck) {
-                res.sendStatus(403);
-                return;
-            }
-            res.status(200).send(global.db[collection][doc]);
+        const check = await security.check(security.READ, collection, doc, user);
+        if (!check) {
+            res.sendStatus(403);
+            return;
         }
+        const result = await readDoc(collection, doc);
+        res.status(200).send(result);
     } else {
-        const queries = Object.keys(req.query)
-        .map(key => {
-            return where(
-                key,
-                req.query[key].split('_')[0],
-                req.query[key].split('_')[1]
-            )
-        });
-        const result = await query(collection, user, ...queries);
+        const filter = Object.keys(req.query)
+        .reduce((prev, curr) => {
+            const field = curr;
+            const split = req.query[field].split('_')
+            const operator = split[0];
+            const value = split[1];
+            return prev = { ...prev, [field]: { [operator]: value }}
+        }, {})
+
+        const cursor = db.collection(collection).find(filter);
+        const result = (await cursor.toArray())
+        .filter(async data => await security.check(security.READ, collection, data._id, user))
         res.send(result);
     }
 });
@@ -54,9 +37,11 @@ router.get('/database/:collection/:doc?', async (req, res) => {
 router.post('/database/:collection/:doc?', async (req, res) => {
     let { collection, doc } = req.params;
     const user = req.headers['user'];
+
+    const docData = await readDoc(collection, doc);
     
     const check = await security.check(
-        global.db[collection]?.[doc] ? security.UPDATE : security.CREATE,
+        docData ? security.UPDATE : security.CREATE,
         collection,
         doc,
         user,
@@ -67,23 +52,16 @@ router.post('/database/:collection/:doc?', async (req, res) => {
         return;
     }
 
-    if (global.db[collection] == null) {
-        global.db[collection] = {};
+    // update
+    if (docData) {
+        const result = await updateDoc(collection, doc, req.body);
+        res.send(result.upsertedId);
     }
-
-    if (!doc) {
-        doc = crypto.randomUUID();
+    // create
+    else {
+        const result = await createDoc(collection, doc, req.body);
+        res.send(result.insertedId);
     }
-
-    const entry = {
-        id: doc,
-        collection,
-        data: req.body
-    }
-
-    global.db[collection][doc] = entry;
-
-    res.send(entry);
 });
 
 // delete doc
@@ -97,12 +75,29 @@ router.delete('/database/:collection/:doc', async (req, res) => {
         return;
     }
 
-    delete global.db[collection][doc];
-    res.send({
-        id: doc,
-        collection
-    });
+    await deleteDoc(collection, doc);
+    res.send(doc);
 });
+
+async function createDoc(collection, doc, data) {
+    if (!collection) return null;
+    return await db.collection(collection).insertOne({ _id: doc, ...data});
+}
+
+async function readDoc(collection, doc) {
+    if (!collection || !doc) return null;
+    return await db.collection(collection).findOne({ _id: doc});
+}
+
+async function updateDoc(collection, doc, data) {
+    if (!collection || !doc) return null;
+    return await db.collection(collection).replaceOne({ _id: doc}, data);
+}
+
+async function deleteDoc(collection, doc) {
+    if (!collection || !doc) return null;
+    return await db.collection(collection).deleteOne({ _id: doc});
+}
 
 async function query(collection, user, ...conditions) {
     const collectionDocs = global.db[collection] ?? {}

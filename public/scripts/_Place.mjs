@@ -2,8 +2,8 @@ import { GoogleMap, Bounds } from "./_maps.mjs"
 
 export default class Place {
     constructor(doc) {
-        this.id = doc.id;
-        Object.assign(this, doc.data);
+        this.id = doc._id;
+        Object.assign(this, doc);
     }
 
     render(container, onclick, btnMsg) {

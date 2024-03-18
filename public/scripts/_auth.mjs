@@ -65,7 +65,7 @@ export async function setCurrentUser(id) {
     const userDoc = await getDoc('users', id);
     const currentUser = {
         id,
-        username: userDoc.data.username
+        username: userDoc.username
     }
     localStorage.setItem('current_user', JSON.stringify(currentUser));
     return currentUser;
