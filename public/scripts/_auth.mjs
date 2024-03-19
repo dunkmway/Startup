@@ -1,4 +1,3 @@
-import { getDoc } from "./_database.mjs";
 import { removeAllChildNodes } from "./_helpers.mjs";
 
 const privatePages = [
@@ -10,13 +9,17 @@ const publicPages = [
     'login.html'
 ]
 
-checkAuth();
-document.addEventListener('DOMContentLoaded', renderHeader)
+initialize();
 
-function checkAuth() {
-    const user = getCurrentUser();
+async function initialize() {
+    checkAuth();
+    document.addEventListener('DOMContentLoaded', renderHeader);
+}
+
+async function checkAuth() {
+    const user = await getCurrentUser();
     const paths = location.pathname.split('/');
-    const currentPage = paths[paths.length - 1]
+    const currentPage = paths[paths.length - 1];
     
     if (!user && privatePages.includes(currentPage)) {
         // unauthorized
@@ -31,12 +34,12 @@ function checkAuth() {
     }
 }
 
-function renderHeader() {
+async function renderHeader() {
     const menu = document.querySelector('header menu');
     if (!menu) return;
     removeAllChildNodes(menu);
 
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (user) {
         const profile = document.createElement('li');
         profile.textContent = user.username;
@@ -56,23 +59,59 @@ function renderHeader() {
     }
 }
 
-export function getCurrentUser() {
-    const userString = localStorage.getItem('current_user');
-    return userString && JSON.parse(userString);
+export async function getCurrentUser() {
+    try {
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (e) {}
+
+    return null;
 }
 
-export async function setCurrentUser(id) {
-    const userDoc = await getDoc('users', id);
-    const currentUser = {
-        id,
-        username: userDoc.username
+export async function loginUser(username, password) {
+    try {
+        const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password })
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (e) {}
+
+    return null;
+}
+
+export async function createUser(username, password) {
+    try {
+        const response = await fetch("/api/auth/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password })
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (e) {}
+
+    return null;
+}
+
+export async function signOutUser() {
+    try {
+        await fetch("/api/auth/logout", {
+            method: "POST",
+        });
+        await checkAuth();
+        await renderHeader();
+    } catch (e) {
+        console.error(e)
     }
-    localStorage.setItem('current_user', JSON.stringify(currentUser));
-    return currentUser;
-}
-
-export function signOutUser() {
-    localStorage.removeItem('current_user');
-    checkAuth();
-    renderHeader();
 }

@@ -1,5 +1,5 @@
 import "./_auth.mjs";
-import { setCurrentUser } from "./_auth.mjs";
+import { loginUser, createUser } from "./_auth.mjs";
 import { query, saveDoc, where } from "./_database.mjs";
 
 const INITIAL = 0;
@@ -13,15 +13,15 @@ async function handleFormSubmit(event) {
     event.preventDefault();
     const target = event.target;
     const data = new FormData(target);
-    const username = data.get('username').trim().toLowerCase();
-    const password = data.get('password').trim().toLowerCase();
+    const username = data.get('username').trim();
+    const password = data.get('password').trim();
 
     resetError();
     switch (CURRENT_STATE) {
         case INITIAL:
             if (username) {
                 // we have the user name so check if a user exists with that name
-                const userDocs = await query('users', where('username', '==', username))
+                const userDocs = await query('users', where('username', '$eq', username))
                 const foundUser = userDocs.length == 1 && userDocs[0];
                 if (foundUser) {
                     // continue to login
@@ -102,28 +102,20 @@ function handleError(errorMsg) {
 }
 
 async function signup(username, password) {
-    const data = {
-        username,
-        password
+    const user = await createUser(username, password);
+
+    if (user) {
+        location.replace('profile.html');
+        return true
+    } else {
+        return false
     }
-    // save the new user
-    const userDoc = await saveDoc('users', null, data);
-
-    // set the currentUser
-    await setCurrentUser(userDoc.id);
-    location.replace('profile.html');
-
-    return true;
 }
 
 async function login(username, password) {
-    const userDocs = await query('users',
-        where('username', '==', username),
-        where('password', '==', password)
-    )
+    const user = await loginUser(username, password);
 
-    if (userDocs.length == 1) {
-        await setCurrentUser(userDocs[0].id);
+    if (user) {
         location.replace('profile.html');
         return true
     } else {
