@@ -9,7 +9,7 @@ async function initialize() {
         const place = new Place(placeDoc);
         place.render(
             document.getElementById('all-places'),
-            () => location.href = `place.html?e=${place.id}`,
+            () => location.href = `place.html?e=${place._id}`,
             'View'
         )
     });

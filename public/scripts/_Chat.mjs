@@ -93,19 +93,18 @@ export default class Chat {
         let lastAuthor;
         return this.messages = messageDocs
         .map(doc => {
-            const data = doc
             const newMessage = new Message(
-                data.place,
-                data.content,
-                data.author,
-                lastAuthor?.id == data.author.id,
-                data.author.id == this.user?.id,
-                data.isPublic, 
-                data.createdAt,
-                doc.id
+                doc.place,
+                doc.content,
+                doc.author,
+                lastAuthor?._id == doc.author._id,
+                doc.author._id == this.user?._id,
+                doc.isPublic, 
+                doc.createdAt,
+                doc._id
             );
 
-            lastAuthor = data.author;
+            lastAuthor = doc.author;
             return newMessage;
         })
         .sort((a,b) => a.createdAt - b.createdAt)
@@ -114,6 +113,6 @@ export default class Chat {
     // help to determine if the author for an upcoming message isSame
     _isMessageSame(author) {
         const lastMessage = this.messages[this.messages.length - 1]
-        return author.id == lastMessage?.author?.id;
+        return author._id == lastMessage?.author?._id;
     }
 }

@@ -1,38 +1,24 @@
-import { getCurrentUser } from "./_auth.mjs";
-
-function addUserHeader(headers = {}) {
-    const user = getCurrentUser()?.id;
-    if (user) {
-        headers.user = user
-    }
-    return headers
-}
+import { httpRequest } from "./_helpers.mjs";
 
 export async function saveDoc(collection, id, data) {
     const url = id ? `/api/database/${collection}/${id}` : `/api/database/${collection}`;
-    const response = await fetch(url, {
+    return await httpRequest(url, {
         method: "POST",
-        headers: addUserHeader({
+        headers: {
             "Content-Type": "application/json",
-        }),
+        },
         body: JSON.stringify(data)
     });
-    return await response.json();
 }
 
 export async function getDoc(collection, id) {
-    const response = await fetch(`/api/database/${collection}/${id}`, {
-        headers: addUserHeader()
-    });
-    return await response.json();
+    return await httpRequest(`/api/database/${collection}/${id}`);
 }
 
 export async function deleteDoc(collection, id) {
-    const response = await fetch(`/api/database/${collection}/${id}`, {
-        method: "DELETE",
-        headers: addUserHeader()
+    return await httpRequest(`/api/database/${collection}/${id}`, {
+        method: "DELETE"
     });
-    return await response.json();
 }
 
 export async function query(collection, ...conditions) {
@@ -40,10 +26,7 @@ export async function query(collection, ...conditions) {
     for (const query of conditions) {
         path += query + '&';
     }
-    const response = await fetch(path, {
-        headers: addUserHeader()
-    });
-    return await response.json();
+    return await httpRequest(path);
 }
 
 export function where(field, operator, value) {

@@ -20,7 +20,7 @@ const RANDOM_MESSAGE_COOLDOWN = 5;
 let currentRandomMessageLevel = 1;
 // TESTING
 
-const CURRENT_USER = getCurrentUser();
+const CURRENT_USER = await getCurrentUser();
 const chatContainer = document.getElementById('chat');
 
 initialize();
@@ -152,23 +152,23 @@ function getRandomMessage() {
 
 const randomUsers = [
     {
-        id: "14a0cb61-e65b-4718-a4f6-684da4fac6c9",
+        _id: "14a0cb61-e65b-4718-a4f6-684da4fac6c9",
         username:  "Wren Clements"
     },
     {
-        id: "e9ddd4ec-8f86-487d-8c43-97f90a93642d",
+        _id: "e9ddd4ec-8f86-487d-8c43-97f90a93642d",
         username:  "Fisher Hart"
     },
     {
-        id: "218c0e09-4b31-4979-8c78-6d278c4c43bb" ,
+        _id: "218c0e09-4b31-4979-8c78-6d278c4c43bb" ,
         username:  "Gemma Schmidt"
     },
     {
-        id: "c6e363c1-a735-4e32-ad42-756c3de7878c",
+        _id: "c6e363c1-a735-4e32-ad42-756c3de7878c",
         username:  "Zayden Alvarado"
     },
     {
-        id: "3db54d11-5319-45cd-87f7-ecc50bee5807",
+        _id: "3db54d11-5319-45cd-87f7-ecc50bee5807",
         username:  "Blake Hickman"
     },
 ];

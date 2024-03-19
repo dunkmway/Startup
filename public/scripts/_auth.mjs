@@ -1,4 +1,4 @@
-import { removeAllChildNodes } from "./_helpers.mjs";
+import { httpRequest, removeAllChildNodes } from "./_helpers.mjs";
 
 const privatePages = [
     'new-place.html',
@@ -60,58 +60,33 @@ async function renderHeader() {
 }
 
 export async function getCurrentUser() {
-    try {
-        const response = await fetch('/api/auth/me');
-        if (response.ok) {
-            return await response.json();
-        }
-    } catch (e) {}
-
-    return null;
+    return httpRequest('/api/auth/me');
 }
 
 export async function loginUser(username, password) {
-    try {
-        const response = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password })
-        });
-        if (response.ok) {
-            return await response.json();
-        }
-    } catch (e) {}
-
-    return null;
+    return httpRequest("/api/auth/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password })
+    });
 }
 
 export async function createUser(username, password) {
-    try {
-        const response = await fetch("/api/auth/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password })
-        });
-        if (response.ok) {
-            return await response.json();
-        }
-    } catch (e) {}
-
-    return null;
+    return httpRequest("/api/auth/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password })
+    });
 }
 
 export async function signOutUser() {
-    try {
-        await fetch("/api/auth/logout", {
-            method: "POST",
-        });
-        await checkAuth();
-        await renderHeader();
-    } catch (e) {
-        console.error(e)
-    }
+    await httpRequest("/api/auth/logout", {
+        method: "POST",
+    })
+    await checkAuth();
+    await renderHeader();
 }

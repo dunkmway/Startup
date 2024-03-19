@@ -11,8 +11,8 @@ const RULES = {
             match: '.*',
             action: [CREATE],
             rule: async (context) => {
-                return await context.user.exists() &&
-                (await context.new.data())?.creator?.id === context.user.id
+                return context.user &&
+                (await context.new.data())?.creator?._id === context.user.id
             }
         },
         {
@@ -24,9 +24,9 @@ const RULES = {
             match: '.*',
             action: [UPDATE, DELETE],
             rule: async (context) => {
-                return await context.user.exists() &&
-                (await context.new.data())?.creator?.id === context.user.id &&
-                (await context.old.data())?.creator?.id === context.user.id
+                return context.user &&
+                (await context.old.data())?.creator?._id === context.user.id &&
+                (await context.new.data())?.creator?._id === context.user.id
             }
         }
     ],
@@ -34,13 +34,13 @@ const RULES = {
         {
             match: '.*',
             action: [CREATE, READ],
-            rule: async (context) => true
+            rule: async (context) => false
         },
         {
             match: '.*',
             action: [UPDATE, DELETE],
             rule: async (context) => {
-                return await context.user.exists() &&
+                return context.user &&
                 context.user.id === context.new.id
             }
         },
@@ -50,23 +50,26 @@ const RULES = {
             match: '.*',
             action: [CREATE],
             rule: async (context) => {
-                return true
-                // return await context.user.exists() &&
-                // (await context.new.data())?.author?.id === context.user.id
+                // TESTING: to allow for fake messages
+                return context.user;
+                // return context.user &&
+                // (await context.new.data())?.author?._id === context.user.id
             }
         },
         {
             match: '.*',
             action: [READ],
-            rule: async (context) => true
+            rule: async (context) => {
+                return context.user
+            }
         },
         {
             match: '.*',
             action: [UPDATE, DELETE],
             rule: async (context) => {
-                return await context.user.exists() &&
-                (await context.new.data())?.author?.id === context.user.id &&
-                (await context.old.data())?.author?.id === context.user.id
+                return context.user &&
+                (await context.old.data())?.author?._id === context.user.id &&
+                (await context.new.data())?.author?._id === context.user.id
             }
         }
     ]
@@ -78,11 +81,11 @@ const RULES = {
  * @param {Number} action type of CRUD operation (CREATE, READ, UPDATE, DELETE)
  * @param {String} collectionId id of collection that is being accessed
  * @param {String} docId id of document that is being accessed
- * @param {String} userId id of the user accessing the database
+ * @param {String} userToken token of the user accessing the database
  * @param {Object} incomingData data that is to be saved to the document (CREATE and UPDATE only)
  * @returns {Promise<Boolean>} is the operation authorized
  */
-async function check(action, collectionId, docId, userId, incomingData = null) {
+async function check(action, collectionId, docId, userToken, incomingData = null) {
     docId = docId ? docId.toString() : '';
 
     // get the rules for the collection
@@ -100,13 +103,17 @@ async function check(action, collectionId, docId, userId, incomingData = null) {
                     id: docId,
                     data: async () => await db.collection(collectionId).findOne({ _id: docId})
                 },
-                user: {
-                    id: userId,
-                    exists: async () => (await db.collection('users').findOne({ _id: userId})) != null
-                },
                 new: {
                     id: docId,
                     data: async () => incomingData
+                }
+            }
+            if (userToken) {
+                const user = await db.collection('users').findOne({ token: userToken })
+                if (user) {
+                    context.user = {
+                        id: user._id.toString()
+                    }
                 }
             }
             return await current.rule(context);

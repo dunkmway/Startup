@@ -2,7 +2,7 @@ import { saveDoc } from "./_database.mjs";
 import { getRandomIndex, removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Message {
-    constructor(place, content, user, isSame, isOwner = true, isPublic = false, createdAt = null, id = null) {
+    constructor(place, content, user, isSame, isOwner = true, isPublic = false, createdAt = null, _id = null) {
         this.place = place;                                     // place id
         this.content = content;                                 // text content of the message
         this.author = user;                                     // user object of the author of the message { id, name }
@@ -10,7 +10,7 @@ export default class Message {
         this.isOwner = isOwner;                                 // whether or not the chat user is the message owner
         this.isPublic = isPublic;                               // whether or not the message is public
         this.createdAt = createdAt ?? new Date().getTime();     // when the message was created
-        this.id = id;                                           // uuid of the message
+        this._id = _id;                                         // uuid of the message
         this.element = null;                                    // html element of the message
         this.randomContent = randomizeText(this.content);       // randomized text content of the message
 
@@ -26,7 +26,7 @@ export default class Message {
             isPublic: this.isPublic,
             createdAt: this.createdAt,
         };
-        await saveDoc('messages', this.id, clone);
+        await saveDoc('messages', this._id, clone);
     }
 
     renderPublic(container) {

@@ -81,7 +81,7 @@ async function submit(event, placeID) {
         name: formData.get('name'),
         description: formData.get('description'),
         bounds: map.getBounds(),
-        creator: getCurrentUser()
+        creator: await getCurrentUser()
     }
 
     if (

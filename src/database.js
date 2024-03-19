@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const security = require('./security.js');
+const { ObjectId } = require('mongodb');
 const db = require('./mongodb.js');
 
 // query database
 router.get('/database/:collection/:doc?', async (req, res) => {
     const { collection, doc } = req.params;
-    const user = req.headers['user'];
+    const userToken = req.cookies['token'];
 
     if (doc) {
-        const check = await security.check(security.READ, collection, doc, user);
+        const check = await security.check(security.READ, collection, doc, userToken);
         if (!check) {
             res.sendStatus(403);
             return;
@@ -28,7 +29,7 @@ router.get('/database/:collection/:doc?', async (req, res) => {
 
         const cursor = db.collection(collection).find(filter);
         const result = (await cursor.toArray())
-        .filter(async data => await security.check(security.READ, collection, data._id, user))
+        .filter(async data => await security.check(security.READ, collection, data._id, userToken))
         res.send(result);
     }
 });
@@ -36,7 +37,7 @@ router.get('/database/:collection/:doc?', async (req, res) => {
 // save doc
 router.post('/database/:collection/:doc?', async (req, res) => {
     let { collection, doc } = req.params;
-    const user = req.headers['user'];
+    const userToken = req.cookies['token'];
 
     const docData = await readDoc(collection, doc);
     
@@ -44,7 +45,7 @@ router.post('/database/:collection/:doc?', async (req, res) => {
         docData ? security.UPDATE : security.CREATE,
         collection,
         doc,
-        user,
+        userToken,
         req.body
     );
     if (!check) {
@@ -67,9 +68,9 @@ router.post('/database/:collection/:doc?', async (req, res) => {
 // delete doc
 router.delete('/database/:collection/:doc', async (req, res) => {
     const { collection, doc } = req.params;
-    const user = req.headers['user'];
+    const userToken = req.cookies['token'];
 
-    const check = await security.check(security.DELETE, collection, doc, user);
+    const check = await security.check(security.DELETE, collection, doc, userToken);
     if (!check) {
         res.sendStatus(403);
         return;
@@ -86,7 +87,7 @@ async function createDoc(collection, doc, data) {
 
 async function readDoc(collection, doc) {
     if (!collection || !doc) return null;
-    return await db.collection(collection).findOne({ _id: doc});
+    return await db.collection(collection).findOne({ _id: new ObjectId(doc)});
 }
 
 async function updateDoc(collection, doc, data) {
@@ -97,81 +98,6 @@ async function updateDoc(collection, doc, data) {
 async function deleteDoc(collection, doc) {
     if (!collection || !doc) return null;
     return await db.collection(collection).deleteOne({ _id: doc});
-}
-
-async function query(collection, user, ...conditions) {
-    const collectionDocs = global.db[collection] ?? {}
-    const queryResult = {};
-
-    for (const docID in collectionDocs) {
-        const doc = collectionDocs[docID];
-        if (await security.check(security.READ, collection, docID, user)) {
-            if (conditions.length > 0) {
-                for (const condition of conditions) {
-                    if (condition(doc)) {
-                        queryResult[docID] = doc;
-                    }
-                }
-            } else {
-                queryResult[docID] = doc;
-            }
-        }
-    }
-    return queryResult;
-}
-
-function where(field, operator, value) {
-    const keys = field.split('.');
-    switch (operator) {
-        case '==':
-            return (doc) => {
-                let current = doc.data;
-                for (const key of keys) {
-                    current = current?.[key];
-                }
-                return current == value;
-            }
-        case '!=':
-            return (doc) => {
-                let current = doc.data;
-                for (const key of keys) {
-                    current = current?.[key];
-                }
-                return current != value;
-            }
-        case '<':
-            return (doc) => {
-                let current = doc.data;
-                for (const key of keys) {
-                    current = current?.[key];
-                }
-                return current < value;
-            }
-        case '>':
-            return (doc) => {
-                let current = doc.data;
-                for (const key of keys) {
-                    current = current?.[key];
-                }
-                return current > value;
-            }
-        case '<=':
-            return (doc) => {
-                let current = doc.data;
-                for (const key of keys) {
-                    current = current?.[key];
-                }
-                return current <= value;
-            }
-        case '>=':
-            return (doc) => {
-                let current = doc.data;
-                for (const key of keys) {
-                    current = current?.[key];
-                }
-                return current >= value;
-            }
-    }
 }
 
 module.exports = router;
