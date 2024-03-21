@@ -83,3 +83,14 @@ For this deliverable I added backend endpoints to store all data in localstorage
 - **Calls to third party endpoints** - Using dad jokes api to get random user messages in the chats.
 - **Backend service endpoints** - Endpoints to perform basic database functionality.
 - **Frontend calls service endpoints** - I did this using the fetch function.
+
+## DB/Login deliverable
+
+For this deliverable I associated the places and messages with the user. I store this data in the database.
+
+- **MongoDB Atlas database created** - done!
+- **Stores data in MongoDB** - done!
+- **User registration** - Creates a new account in the database.
+- **existing user** - Stores the places and messages under the same user if the user already exists.
+- **Use MongoDB to store credentials** - Stores both user and their places and messages.
+- **Restricts functionality** - You cannot message or create places until you have logged in. This is restricted on the backend.

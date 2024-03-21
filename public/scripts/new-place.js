@@ -1,6 +1,6 @@
 import { getCurrentUser } from "./_auth.mjs";
 import { GoogleMap, Bounds } from "./_maps.mjs"
-import { deleteDoc, getDoc, saveDoc } from "./_database.mjs";
+import { deleteDoc, getDoc, saveDoc, where, query } from "./_database.mjs";
 
 const LOCATION_OPTIONS = {
     timeout: 5000,
@@ -28,7 +28,7 @@ async function initialize() {
         // show the delete button
         const deleteBtn = document.getElementById('delete');
         deleteBtn.style.display = 'block';
-        deleteBtn.addEventListener('click', () =>  deletePlace(placeDoc));
+        deleteBtn.addEventListener('click', () =>  deletePlace(placeID));
 
         // initialize the map with the existing bounds
         const bounds = new Bounds(placeDoc.bounds);
@@ -68,6 +68,8 @@ function locationNotFound(err) {
 }
 
 async function deletePlace(placeID) {
+    const message = await query('messages', where('place', '$eq', placeID))
+    await Promise.all(message.map(doc => deleteDoc('messages', doc._id)))
     await deleteDoc('places', placeID);
     location.href = `profile.html`;
 }

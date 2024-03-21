@@ -156,14 +156,14 @@ export class Bounds {
         if (this.contains(lat, lng)) return 0;
 
         const { lat: closeLat, lng: closeLng } = this.closestPointTo(lat, lng);
-        return this._distance(closeLat, closeLng, lat, lng);
+        return Geo.distance(closeLat, closeLng, lat, lng);
     }
 
     angleFrom(lat, lng) {
         if (this.contains(lat, lng)) return null;
 
         const { lat: closeLat, lng: closeLng } = this.closestPointTo(lat, lng);
-        return this._fromBearingToDeg(this._bearing(lat, lng, closeLat, closeLng));
+        return Geo.fromBearingToDeg(Geo.bearing(lat, lng, closeLat, closeLng));
     }
 
     directionFromDegree(degree) {
@@ -197,57 +197,6 @@ export class Bounds {
         }
     }
 
-    _distance(lat1, lng1, lat2, lng2) {
-        const earthRadiusKm = 6371;
-        const dLat = this._toRadians(lat2 - lat1);
-        const dLng = this._toRadians(lng2 - lng1);
-
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                  Math.cos(this._toRadians(lat1)) * Math.cos(this._toRadians(lat2)) *
-                  Math.sin(dLng / 2) * Math.sin(dLng / 2);
-
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        const distance = earthRadiusKm * c;
-        return this._toMiles(distance);
-    }
-
-    _bearing(lat1, lng1, lat2, lng2) {
-        // convert to radians
-        lat1 = this._toRadians(lat1);
-        lng1 = this._toRadians(lng1);
-        lat2 = this._toRadians(lat2);
-        lng2 = this._toRadians(lng2);
-
-        // calcultion
-        const deltaLng = lng2 - lng1;
-        const X = Math.cos(lat2) * Math.sin(deltaLng);
-        const Y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLng);
-        return this._toDegrees(Math.atan2(X, Y)) % 360;
-    }
-
-    _toRadians(degrees) {
-        return degrees * Math.PI / 180;
-    }
-
-    _toDegrees(radians) {
-        return radians * 180 / Math.PI;
-    }
-
-    _toMiles(kilometers) {
-        const milesConversion = 0.621371;
-        return kilometers * milesConversion;
-    }
-
-    _toKilometers(miles) {
-        const kmConversion = 1.60934;
-        return miles * kmConversion;
-    }
-
-    _fromBearingToDeg(bearing) {
-        return (90 - bearing) % 360;
-    }
-
     /**
      * Determine if the bounds is within a certain radius of the origin latitude and origin longitude
      * @param {Number} originLat in degrees
@@ -257,7 +206,7 @@ export class Bounds {
      */
     isWithinRadius(originLat, originLng, radius) {
         const { lat, lng } = this.center();
-        return this._distance(lat, lng, originLat, originLng) <= radius / 69;
+        return Geo.distance(lat, lng, originLat, originLng) <= radius / 69;
     }
 
     static fromCorners(corners) {
@@ -278,5 +227,68 @@ export class Bounds {
             east: rectangle.getBounds().getNorthEast().lng(),
             west: rectangle.getBounds().getSouthWest().lng()
         })
+    }
+}
+
+export class Geo {
+    static earthRadiusKm = 6371;
+
+    static distance(lat1, lng1, lat2, lng2) {
+        const dLat = Geo.toRadians(lat2 - lat1);
+        const dLng = Geo.toRadians(lng2 - lng1);
+
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(Geo.toRadians(lat1)) * Math.cos(Geo.toRadians(lat2)) *
+                  Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        const distance = Geo.earthRadiusKm * c;
+        return Geo.toMiles(distance);
+    }
+
+    static bearing(lat1, lng1, lat2, lng2) {
+        // convert to radians
+        lat1 = Geo.toRadians(lat1);
+        lng1 = Geo.toRadians(lng1);
+        lat2 = Geo.toRadians(lat2);
+        lng2 = Geo.toRadians(lng2);
+
+        // calcultion
+        const deltaLng = lng2 - lng1;
+        const X = Math.cos(lat2) * Math.sin(deltaLng);
+        const Y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLng);
+        return Geo.toDegrees(Math.atan2(X, Y)) % 360;
+    }
+
+    static toRadians(degrees) {
+        return degrees * Math.PI / 180;
+    }
+
+    static toDegrees(radians) {
+        return radians * 180 / Math.PI;
+    }
+
+    static toMiles(kilometers) {
+        const milesConversion = 0.621371;
+        return kilometers * milesConversion;
+    }
+
+    static toKilometers(miles) {
+        const kmConversion = 1.60934;
+        return miles * kmConversion;
+    }
+
+    static fromBearingToDeg(bearing) {
+        return (90 - bearing) % 360;
+    }
+
+    static changeInLatitude(miles) {
+        return Geo.toDegrees(miles / Geo.toMiles(Geo.earthRadiusKm))
+    }
+
+    static changeInLongitude(latitude, miles) {
+        const radius = Geo.earthRadiusKm * Math.cos(Geo.toRadians(latitude));
+        return Geo.toDegrees(miles / radius);
     }
 }

@@ -30,5 +30,5 @@ export async function query(collection, ...conditions) {
 }
 
 export function where(field, operator, value) {
-    return `${field}=${operator}_${value}`
+    return `${field}|${operator}=${JSON.stringify(value)}`
 }

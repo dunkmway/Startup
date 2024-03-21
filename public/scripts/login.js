@@ -11,7 +11,9 @@ document.querySelector('form').addEventListener('submit', handleFormSubmit);
 
 async function handleFormSubmit(event) {
     event.preventDefault();
+    
     const target = event.target;
+    startWorking(target);
     const data = new FormData(target);
     const username = data.get('username').trim();
     const password = data.get('password').trim();
@@ -57,6 +59,20 @@ async function handleFormSubmit(event) {
             }
             break;
     }
+
+    stopWorking(target);
+}
+
+function startWorking(form) {
+    const button = form.querySelector('button[type="submit"]');
+    button.disable = true;
+    button.classList.add('loading');
+}
+
+function stopWorking(form) {
+    const button = form.querySelector('button[type="submit"]');
+    button.disable = false;
+    button.classList.remove('loading');
 }
 
 function setLogin() {

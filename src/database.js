@@ -20,11 +20,14 @@ router.get('/database/:collection/:doc?', async (req, res) => {
     } else {
         const filter = Object.keys(req.query)
         .reduce((prev, curr) => {
-            const field = curr;
-            const split = req.query[field].split('_')
-            const operator = split[0];
-            const value = split[1];
-            return prev = { ...prev, [field]: { [operator]: value }}
+            const split = curr.split('|')
+            const field = split[0];
+            const operator = split[1];
+            const value = JSON.parse(req.query[curr]);
+
+            if (!prev[field]) prev[field] = {};
+            prev[field][operator] = value;
+            return prev;
         }, {})
 
         const cursor = db.collection(collection).find(filter);

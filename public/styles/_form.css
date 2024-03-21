@@ -26,4 +26,24 @@ form button {
     background-color: var(--ac-1);
     color: var(--cl-1);
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form button[type="submit"].loading::after {
+    content: "";
+    display: inline-block;
+    margin-left: 0.5em;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    border: 2px solid var(--cl-1);
+    border-bottom-color: transparent;
+    animation: spin 500ms infinite linear;
+}
+
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
 }

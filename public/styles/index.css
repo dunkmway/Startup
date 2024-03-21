@@ -1,2 +1,14 @@
 @import "_main.css";
 @import "_place-grid.css";
+@import "_placeholder.css";
+
+#closeMiles {
+    color: var(--cl-1);
+    background-color: transparent;
+    width: 3em;
+    outline: none;
+    border: none;
+    font-size: 1em;
+    border-bottom: 1px solid var(--cl-1);
+    text-align: right;
+}
