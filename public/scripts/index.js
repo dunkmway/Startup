@@ -12,19 +12,13 @@ async function initialize() {
     const milesInput = document.getElementById('closeMiles');
     milesInput.addEventListener('keydown', closeMilesOnKeydown);
 
-    // start retreiving all places
-    setAllPlaces();
-
     // get the current location
     try {
         const position = await getCurrentLocation(false, 10000, 0);
         LATITUDE = position.coords.latitude;
         LONGITUDE = position.coords.longitude;
-
-        setCurrentPlaces(LATITUDE, LONGITUDE);
         setClosePlaces(LATITUDE, LONGITUDE, parseInt(milesInput.value));
-    
-        
+
     } catch(err) {
         console.log(err)
     }
@@ -36,7 +30,7 @@ function closeMilesOnKeydown(event) {
     const key = event.key;
 
     // if numeric
-    const numeric = new RegExp('[0-9]{1}');
+    const numeric = new RegExp('^[0-9]{1}$');
     if (numeric.test(key)) {
         target.value = target.value === '0' ? '' : target.value;
         target.value = target.value + key;
@@ -46,26 +40,9 @@ function closeMilesOnKeydown(event) {
         target.value = target.value.length !== 0 ? target.value : '0';
         milesChanged(parseInt(target.value));
     }
-}
 
-async function setCurrentPlaces(latitude, longitude) {
-    const currentPlaces = await query('places',
-        where('bounds.north', '$gte', latitude),
-        where('bounds.south', '$lte', latitude),
-        where('bounds.east', '$gte', longitude),
-        where('bounds.west', '$lte', longitude)
-    )
-
-    const wrapper = document.getElementById('current-places');
-    removeAllChildNodes(wrapper);
-    currentPlaces.forEach(placeDoc => {
-        const place = new Place(placeDoc);
-        place.render(
-            wrapper,
-            () => location.href = `place.html?e=${place._id}`,
-            'View'
-        )
-    });
+    // change the input size
+    target.size = target.value.length
 }
 
 async function setClosePlaces(latitude, longitude, distance) {
@@ -94,21 +71,6 @@ async function setClosePlaces(latitude, longitude, distance) {
     // render them
     removeAllChildNodes(wrapper);
     closePlaces.forEach(placeDoc => {
-        const place = new Place(placeDoc);
-        place.render(
-            wrapper,
-            () => location.href = `place.html?e=${place._id}`,
-            'View'
-        )
-    });
-}
-
-async function setAllPlaces() {
-    const allPlaces = await query('places');
-
-    const wrapper = document.getElementById('all-places');
-    removeAllChildNodes(wrapper);
-    allPlaces.forEach(placeDoc => {
         const place = new Place(placeDoc);
         place.render(
             wrapper,
