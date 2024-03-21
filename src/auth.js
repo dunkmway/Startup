@@ -32,7 +32,7 @@ router.post('/auth/login', async (req, res) => {
 
 router.post('/auth/logout', async (req, res) => {
     clearAuthCookie(res);
-    res.sendStatus(200);
+    res.send({});
   });
 
 // getMe for the currently authenticated user
