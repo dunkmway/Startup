@@ -1,5 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const { protocolUpgrade } = require('./src/webSocket.js');
 const app = express();
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
@@ -27,6 +28,9 @@ app.use((_req, res) => {
   res.redirect('/');
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+// initialize the WebSocketServer
+protocolUpgrade(server);
