@@ -51,10 +51,8 @@ const RULES = {
             match: '.*',
             action: [CREATE],
             rule: async (context) => {
-                // TESTING: to allow for fake messages
-                return context.user;
-                // return context.user &&
-                // (await context.new.data())?.author?._id === context.user.id
+                return context.user &&
+                (await context.new.data())?.author?._id === context.user.id
             }
         },
         {

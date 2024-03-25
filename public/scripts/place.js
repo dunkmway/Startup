@@ -15,11 +15,6 @@ const LOCATION_OPTIONS = {
     enableHighAccuracy: true
 };
 
-// TESTING
-const RANDOM_MESSAGE_COOLDOWN = 5;
-let currentRandomMessageLevel = 1;
-// TESTING
-
 const CURRENT_USER = await getCurrentUser();
 const chatContainer = document.getElementById('chat');
 
@@ -91,9 +86,6 @@ function locationFound(pos, place, chat) {
         document.getElementById('direction').textContent = 'You are here!';
         document.getElementById('compass').style.setProperty('--rotation', `${-90}deg`);
     }
-
-    // TESTING start running random messages
-    // createRandomMessage(chat);
 }
 
 function locationNotFound(err, chat) {
@@ -117,62 +109,4 @@ function messageSubmit(event, chat) {
     chat.addMessage(data.get('message'));
 
     target.reset();
-
-    // FOR TESTING:
-    // reset the cooldown for random messages
-    // currentRandomMessageLevel = 1;
-    // createRandomMessage(chat);
 }
-
-// FOR TESTING:
-// Will create random messages
-function createRandomMessage(chat) {
-    const randomMillis = Math.random() * (MAX_RANDOM_MILLIS - MIN_RANDOM_MILLIS) + MIN_RANDOM_MILLIS;
-    setTimeout(async () => {
-        // only allow a certain amount of fake messages between real messages
-        if (currentRandomMessageLevel <= RANDOM_MESSAGE_COOLDOWN) {
-            const message = await getRandomMessage();
-            chat.addFakeMessage(
-                message,
-                randomUsers[getRandomIndex(randomUsers.length)]
-            );
-            currentRandomMessageLevel++;
-            createRandomMessage(chat);
-        }
-
-    }, randomMillis)
-}
-
-function getRandomMessage() {
-    return fetch("https://icanhazdadjoke.com", {
-        headers: {
-            "Accept": "application/json",
-            "User-Agent": "BYU CS 260 - There (https://github.com/dunkmway/Startup)"
-        }
-    })
-    .then(response => response.json())
-    .then(data => data.joke);
-}
-
-const randomUsers = [
-    {
-        _id: "14a0cb61-e65b-4718-a4f6-684da4fac6c9",
-        username:  "Wren Clements"
-    },
-    {
-        _id: "e9ddd4ec-8f86-487d-8c43-97f90a93642d",
-        username:  "Fisher Hart"
-    },
-    {
-        _id: "218c0e09-4b31-4979-8c78-6d278c4c43bb" ,
-        username:  "Gemma Schmidt"
-    },
-    {
-        _id: "c6e363c1-a735-4e32-ad42-756c3de7878c",
-        username:  "Zayden Alvarado"
-    },
-    {
-        _id: "3db54d11-5319-45cd-87f7-ecc50bee5807",
-        username:  "Blake Hickman"
-    },
-];

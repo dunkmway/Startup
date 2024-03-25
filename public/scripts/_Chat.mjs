@@ -24,8 +24,9 @@ export default class Chat {
 
         // Display messages we receive from our friends
         this.socket.onmessage = async (event) => {
-            const text = await event.data.text();
-            this.getMessage(JSON.parse(text));
+            // const text = await event.data.text();
+            // this.getMessage(JSON.parse(text));
+            this.getMessage(JSON.parse(event.data));
         };
 
         // If the webSocket is closed then disable the interface
@@ -43,7 +44,6 @@ export default class Chat {
     }
 
     getMessage(data) {
-        console.log(data);
         const existingMessage = this.messages.find(message => message._id === data._id);
         if (existingMessage) {
             existingMessage.update(data);
@@ -69,7 +69,7 @@ export default class Chat {
     }
 
     // used to add a message from the current user
-    async addMessage(content) {
+    addMessage(content) {
         if (!this.user) return;
         if (!content.trim()) return;
 
@@ -82,7 +82,7 @@ export default class Chat {
             this._isMessageSame(this.user)
         );
         // async save the message;
-        await newMessage.save();
+        newMessage.save();
 
         // store the message to the chat
         this.messages.push(newMessage);
@@ -91,29 +91,6 @@ export default class Chat {
 
         // scroll the message into view
         this._scrollToMessage(newMessage);
-
-        return newMessage;
-    }
-
-    // used for testing to fake webhook data
-    addFakeMessage(content, user) {
-        // construct the message with defaults except set isOwner to false
-        const newMessage = new Message(
-            this.socket,
-            this.place,
-            content,
-            user,
-            this._isMessageSame(user),
-            false,
-            Math.random() < 0.2
-        );
-        // async save the message;
-        newMessage.save();
-
-        // store the message to the chat
-        this.messages.push(newMessage);
-        // render the message
-        this.renderMessage(newMessage);
 
         return newMessage;
     }

@@ -207,6 +207,10 @@ form > textarea {
     resize: none;
 }
 
+textarea:disabled {
+    cursor: not-allowed;
+}
+
 textarea:focus {
     outline: none;
 }

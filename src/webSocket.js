@@ -1,4 +1,6 @@
 const { WebSocketServer } = require('ws');
+const { getRandomMessage } = require('./fakeMessages.js')
+const db = require('./mongodb.js');
 
 // Create a websocket object
 const wss = new WebSocketServer({ noServer: true });
@@ -23,7 +25,6 @@ wss.on('connection', (ws) => {
   ws.on('message', function message(message) {
     // get the data from the message
     const data = JSON.parse(message.toString());
-    console.log(data)
 
     // if no place was passed to the message we can't do anything
     if (!data.place) return;
@@ -42,9 +43,31 @@ wss.on('connection', (ws) => {
         case 'send':
             chatConnections.forEach((c) => {
                 if (c.id !== connection.id) {
-                  c.ws.send(message);
+                  c.ws.send(JSON.stringify(data));
                 }
-              });
+            });
+
+            // we also want to add fake messages to demonstrate functionality
+            // after each message we'll add a random number of messages from fake people
+            const random = Math.floor(Math.random() * 4);
+            for (let i = 0; i < random; i++) {
+                getRandomMessage(data.place)
+                .then(randomMessage => {
+                    if (randomMessage) {
+                        db.collection('messages').insertOne(randomMessage)
+                        .then(result => {
+                            const newMessage = {
+                                _id: result.insertedId,
+                                ...randomMessage
+                            }
+                            chatConnections.forEach((c) => {
+                                c.ws.send(JSON.stringify(newMessage));
+                            });
+                        })
+    
+                    }
+                })
+            }
             break;
         default:
             // message not formatted correctly
