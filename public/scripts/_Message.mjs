@@ -2,7 +2,7 @@ import { saveDoc } from "./_database.mjs";
 import { getRandomIndex, removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Message {
-    constructor(place, content, user, isSame, isOwner = true, isPublic = false, createdAt = null, _id = null) {
+    constructor(socket, place, content, user, isSame, isOwner = true, isPublic = false, createdAt = null, _id = null) {
         this.place = place;                                     // place id
         this.content = content;                                 // text content of the message
         this.author = user;                                     // user object of the author of the message { id, name }
@@ -11,22 +11,35 @@ export default class Message {
         this.isPublic = isPublic;                               // whether or not the message is public
         this.createdAt = createdAt ?? new Date().getTime();     // when the message was created
         this._id = _id;                                         // uuid of the message
+        this.socket = socket                                    // web socket
         this.element = null;                                    // html element of the message
         this.randomContent = randomizeText(this.content);       // randomized text content of the message
 
     }
 
-    // save this message to the database
-    async save() {
-        // make a copy without the event or id to save
-        const clone = {
+    _toJSON() {
+        return {
             place: this.place,
             content: this.content,
             author: this.author,
             isPublic: this.isPublic,
             createdAt: this.createdAt,
-        };
-        await saveDoc('messages', this._id, clone);
+        }
+    }
+
+    // save this message to the database
+    async save() {
+        this._id = (await saveDoc('messages', this._id, this._toJSON()))._id;
+        const socketMsg = {
+            type: 'send',
+            _id: this._id,
+            ...this._toJSON()
+        }
+        this.socket.send(JSON.stringify(socketMsg));
+    }
+
+    update(data) {
+        Object.assign(this, data);
     }
 
     renderPublic(container) {
@@ -69,16 +82,18 @@ export default class Message {
                 '<img src="images/invisible.png">'
             }
             `
-            toggle.addEventListener('click', () => {
-                this.isPublic = !this.isPublic;
-                this.save();
-                this._render(container, isPublicRendering);
-            })
+            toggle.addEventListener('click', () => this._toggleVisibility(container, isPublicRendering));
             this.element.appendChild(toggle);
         }
         isHidden && this.element.classList.add('hidden');
         !isHidden && this.element.classList.remove('hidden');
         this.isSame && this.element.classList.add('same');
+    }
+
+    _toggleVisibility(container, isPublicRendering) {
+        this.isPublic = !this.isPublic;
+        this.save();
+        this._render(container, isPublicRendering);
     }
 }
 

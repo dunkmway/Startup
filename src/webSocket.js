@@ -4,7 +4,7 @@ const { WebSocketServer } = require('ws');
 const wss = new WebSocketServer({ noServer: true });
 
 // Handle the protocol upgrade from HTTP to WebSocket
-export function protocolUpgrade(server) {
+function protocolUpgrade(server) {
     server.on('upgrade', (request, socket, head) => {
       wss.handleUpgrade(request, socket, head, function done(ws) {
         wss.emit('connection', ws, request);
@@ -13,28 +13,54 @@ export function protocolUpgrade(server) {
 }
 
 // Keep track of all the connections so we can forward messages
-let connections = [];
+let chats = {}
 let id = 0;
 
 wss.on('connection', (ws) => {
   const connection = { id: ++id, alive: true, ws: ws };
-  connections.push(connection);
 
   // Forward messages to everyone except the sender
-  ws.on('message', function message(data) {
-    connections.forEach((c) => {
-      if (c.id !== connection.id) {
-        c.ws.send(data);
-      }
-    });
+  ws.on('message', function message(message) {
+    // get the data from the message
+    const data = JSON.parse(message.toString());
+    console.log(data)
+
+    // if no place was passed to the message we can't do anything
+    if (!data.place) return;
+
+    // handle the two types of messages
+    // 1. a user is specifiying that they would like to listen to a chat
+    // 2. a user is sending a message for a chat
+    const chatConnections = chats[data.place] ? chats[data.place] : chats[data.place] = [];
+    switch (data.type) {
+        case 'listen':
+            // set up the chat object
+            connection.chat = data.place;
+            chatConnections.push(connection);
+
+            break;
+        case 'send':
+            chatConnections.forEach((c) => {
+                if (c.id !== connection.id) {
+                  c.ws.send(message);
+                }
+              });
+            break;
+        default:
+            // message not formatted correctly
+    }
   });
 
   // Remove the closed connection so we don't try to forward anymore
   ws.on('close', () => {
-    const pos = connections.findIndex((o, i) => o.id === connection.id);
-
-    if (pos >= 0) {
-      connections.splice(pos, 1);
+    // remove from chat
+    const chat = connection?.chat;
+    if (chat) {
+        const chatConnections = chats[chat];
+        const chatPos = chatConnections.findIndex((o, i) => o.id === connection.id);
+        if (chatPos >= 0) {
+        chatConnections.splice(chatPos, 1);
+        }
     }
   });
 
@@ -46,13 +72,17 @@ wss.on('connection', (ws) => {
 
 // Keep active connections alive
 setInterval(() => {
-  connections.forEach((c) => {
-    // Kill any connection that didn't respond to the ping last time
-    if (!c.alive) {
-      c.ws.terminate();
-    } else {
-      c.alive = false;
-      c.ws.ping();
+    for (const chat in chats) {
+        chats[chat].forEach((c) => {
+            // Kill any connection that didn't respond to the ping last time
+            if (!c.alive) {
+              c.ws.terminate();
+            } else {
+              c.alive = false;
+              c.ws.ping();
+            }
+          });   
     }
-  });
 }, 10000);
+
+module.exports = { protocolUpgrade };

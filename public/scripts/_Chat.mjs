@@ -3,32 +3,91 @@ import { where, query } from "./_database.mjs";
 import { removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Chat {
-    constructor(place, user, container, isPublic = true) {
+    constructor(place, user, container, socket, isPublic = true) {
         this.place = place;
         this.container = container;
         this.user = user;
         this.isPublic = isPublic;
+
+        this.socket = socket;
+        this.isConnected = false;
+
+        this._setupSocket();
+    }
+
+    _setupSocket() {
+        // Display that we have opened the webSocket
+        this.socket.onopen = (event) => {
+            this.isConnected = true;
+            console.log('connected');
+        };
+
+        // Display messages we receive from our friends
+        this.socket.onmessage = async (event) => {
+            const text = await event.data.text();
+            this.getMessage(JSON.parse(text));
+        };
+
+        // If the webSocket is closed then disable the interface
+        this.socket.onclose = (event) => {
+            this.isConnected = false;
+            console.log('disconnected');
+        };
+
+        // send the connection message to this chat's place
+        const msg = {
+            type: 'listen',
+            place: this.place
+        }
+        this.socket.send(JSON.stringify(msg));
+    }
+
+    getMessage(data) {
+        console.log(data);
+        const existingMessage = this.messages.find(message => message._id === data._id);
+        if (existingMessage) {
+            existingMessage.update(data);
+            this.renderMessage(existingMessage);
+        } else {
+            const newMessage = new Message(
+                this.socket,
+                data.place,
+                data.content,
+                data.author,
+                this._isMessageSame(data.author),
+                this.user._id === data.author._id,
+                data.isPublic,
+                data.createdAt,
+                data._id
+            );
+    
+            // store the message to the chat
+            this.messages.push(newMessage);
+            // render the message
+            this.renderMessage(newMessage);
+        }
     }
 
     // used to add a message from the current user
-    addMessage(content) {
+    async addMessage(content) {
         if (!this.user) return;
         if (!content.trim()) return;
 
         // construct the message with all defaults
         const newMessage = new Message(
+            this.socket,
             this.place,
             content,
             this.user,
             this._isMessageSame(this.user)
         );
         // async save the message;
-        newMessage.save();
+        await newMessage.save();
 
         // store the message to the chat
         this.messages.push(newMessage);
         // render the message
-        this.isPublic ? newMessage.renderPublic(this.container) : newMessage.renderPrivate(this.container);
+        this.renderMessage(newMessage);
 
         // scroll the message into view
         this._scrollToMessage(newMessage);
@@ -40,6 +99,7 @@ export default class Chat {
     addFakeMessage(content, user) {
         // construct the message with defaults except set isOwner to false
         const newMessage = new Message(
+            this.socket,
             this.place,
             content,
             user,
@@ -53,7 +113,7 @@ export default class Chat {
         // store the message to the chat
         this.messages.push(newMessage);
         // render the message
-        this.isPublic ? newMessage.renderPublic(this.container) : newMessage.renderPrivate(this.container);
+        this.renderMessage(newMessage);
 
         return newMessage;
     }
@@ -66,6 +126,10 @@ export default class Chat {
     makePrivate() {
         this.isPublic = false;
         this._render();
+    }
+
+    renderMessage(message) {
+        this.isPublic ? message.renderPublic(this.container) : message.renderPrivate(this.container);
     }
 
     _scrollToMessage(message) {
@@ -94,6 +158,7 @@ export default class Chat {
         return this.messages = messageDocs
         .map(doc => {
             const newMessage = new Message(
+                this.socket,
                 doc.place,
                 doc.content,
                 doc.author,

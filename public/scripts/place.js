@@ -23,6 +23,9 @@ let currentRandomMessageLevel = 1;
 const CURRENT_USER = await getCurrentUser();
 const chatContainer = document.getElementById('chat');
 
+const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+const socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+
 initialize();
 
 async function initialize() {
@@ -37,7 +40,8 @@ async function initialize() {
     const chat = new Chat(
         PLACE_ID,
         CURRENT_USER,
-        chatContainer
+        chatContainer,
+        socket
     );
     await chat.loadMessages();
     chat.makePublic();
@@ -89,12 +93,12 @@ function locationFound(pos, place, chat) {
     }
 
     // TESTING start running random messages
-    createRandomMessage(chat);
+    // createRandomMessage(chat);
 }
 
 function locationNotFound(err, chat) {
     chat.makePublic();
-        document.querySelector('#user-input > textarea').disabled = true;
+    document.querySelector('#user-input > textarea').disabled = true;
 }
 
 document.getElementById('message-input').addEventListener('keypress', (ev) => {
@@ -116,8 +120,8 @@ function messageSubmit(event, chat) {
 
     // FOR TESTING:
     // reset the cooldown for random messages
-    currentRandomMessageLevel = 1;
-    createRandomMessage(chat);
+    // currentRandomMessageLevel = 1;
+    // createRandomMessage(chat);
 }
 
 // FOR TESTING:

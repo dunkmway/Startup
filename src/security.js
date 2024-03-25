@@ -1,4 +1,5 @@
 const db = require('./mongodb.js');
+const { ObjectId } = require('mongodb');
 
 const CREATE = 0;
 const READ = 1;
@@ -101,7 +102,7 @@ async function check(action, collectionId, docId, userToken, incomingData = null
             const context = {
                 old: {
                     id: docId,
-                    data: async () => await db.collection(collectionId).findOne({ _id: docId})
+                    data: async () => await db.collection(collectionId).findOne({ _id: new ObjectId(docId)})
                 },
                 new: {
                     id: docId,

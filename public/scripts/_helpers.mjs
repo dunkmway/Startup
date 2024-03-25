@@ -31,6 +31,7 @@ export async function httpRequest(URL, options = {}) {
     try {
         const response = await fetch(URL, options);
         if (response.ok) {
+            // console.log(await response.text())
             return await response.json();
         } else {
             console.warn({

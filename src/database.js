@@ -59,12 +59,12 @@ router.post('/database/:collection/:doc?', async (req, res) => {
     // update
     if (docData) {
         const result = await updateDoc(collection, doc, req.body);
-        res.send(result.upsertedId);
+        res.send( {_id: result.upsertedId ?? doc} );
     }
     // create
     else {
         const result = await createDoc(collection, doc, req.body);
-        res.send(result.insertedId);
+        res.send( { _id: result.insertedId ?? doc} );
     }
 });
 
@@ -80,12 +80,12 @@ router.delete('/database/:collection/:doc', async (req, res) => {
     }
 
     await deleteDoc(collection, doc);
-    res.send(doc);
+    res.send( {_id: doc} );
 });
 
 async function createDoc(collection, doc, data) {
     if (!collection) return null;
-    return await db.collection(collection).insertOne({ _id: doc, ...data});
+    return await db.collection(collection).insertOne({ _id: new ObjectId(doc), ...data});
 }
 
 async function readDoc(collection, doc) {
@@ -95,12 +95,12 @@ async function readDoc(collection, doc) {
 
 async function updateDoc(collection, doc, data) {
     if (!collection || !doc) return null;
-    return await db.collection(collection).replaceOne({ _id: doc}, data);
+    return await db.collection(collection).replaceOne({ _id: new ObjectId(doc)}, data);
 }
 
 async function deleteDoc(collection, doc) {
     if (!collection || !doc) return null;
-    return await db.collection(collection).deleteOne({ _id: doc});
+    return await db.collection(collection).deleteOne({ _id: new ObjectId(doc)});
 }
 
 module.exports = router;
