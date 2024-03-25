@@ -55,7 +55,7 @@ export default class Chat {
                 data.content,
                 data.author,
                 this._isMessageSame(data.author),
-                this.user._id === data.author._id,
+                this.user?._id === data.author._id,
                 data.isPublic,
                 data.createdAt,
                 data._id
