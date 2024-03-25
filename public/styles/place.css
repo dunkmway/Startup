@@ -175,6 +175,7 @@ main {
     max-width: 800px;
     width: 100%;
     margin: 70px auto;
+    padding: 1em;
 }
 
 footer {
