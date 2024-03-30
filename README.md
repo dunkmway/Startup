@@ -94,3 +94,12 @@ For this deliverable I associated the places and messages with the user. I store
 - **existing user** - Stores the places and messages under the same user if the user already exists.
 - **Use MongoDB to store credentials** - Stores both user and their places and messages.
 - **Restricts functionality** - You cannot message or create places until you have logged in. This is restricted on the backend.
+
+## WebSocket deliverable
+
+For this deliverable I used webSocket to update the chat messages on the frontend in realtime.
+
+- **Backend listens for WebSocket connection** - done!
+- **Frontend makes WebSocket connection** - done!
+- **Data sent over WebSocket connection** - done!
+- **WebSocket data displayed** - All user messages display in realtime.
