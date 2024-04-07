@@ -1,6 +1,5 @@
-@import "_main.css";
-@import "_place-grid.css";
-@import "_placeholder.css";
+@import "../../utils/styles/_place-grid.css";
+@import "../../utils/styles/_placeholder.css";
 
 .title {
     padding-block: 1em;

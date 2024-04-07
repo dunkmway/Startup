@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>There</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-    <link rel="stylesheet" href="styles/profile.css">
-    <script type="module" src="scripts/profile.js" defer></script>
+    <!-- <link rel="stylesheet" href="styles/index.css">
+    <script type="module" src="scripts/index.js" defer></script> -->
 </head>
 <body>
     <header>
@@ -19,11 +18,11 @@
     </header>
 
     <main>
-        <div class="heading">
-            <h2>My Places</h2>
-            <a href="new-place.html"><button>New Place</button></a>
+        <div class="title">
+            <h2>Places Near Me</h2>
+            <p>Places within <input type="text" id="closeMiles" value="5" size="1"></input> miles.</p>
         </div>
-        <section id="places" class="place-grid">
+        <section id="close-places" class="place-grid">
             <div class="place">
                 <div class="placeholder shimmer"></div>
             </div>
@@ -38,6 +37,7 @@
             </div>
         </section>
     </main>
+
 
     <footer>
         <p>Duncan Morais</p>
