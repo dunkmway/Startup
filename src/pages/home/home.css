@@ -1,19 +1,18 @@
-@import "../../utils/styles/_place-grid.css";
-@import "../../utils/styles/_placeholder.css";
-
-.title {
-    padding-block: 1em;
-}
-
-.title > * {
-    margin: 0;
-}
-
-#closeMiles {
-    color: var(--cl-1);
-    background-color: transparent;
-    border: none;
-    font-size: 1em;
-    border-bottom: 2px solid var(--ac-1);
-    text-align: center;
+main.home {
+    .title {
+        padding-block: 1em;
+    }
+    
+    .title > * {
+        margin: 0;
+    }
+    
+    #closeMiles {
+        color: var(--cl-1);
+        background-color: transparent;
+        border: none;
+        font-size: 1em;
+        border-bottom: 2px solid var(--ac-1);
+        text-align: center;
+    }
 }

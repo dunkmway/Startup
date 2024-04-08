@@ -1,28 +1,22 @@
-/* @import "_form.css"; */
-
-main {
+main.login {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 2em;
-}
 
-form {
-    max-width: 400px;
-}
-
-#passwordGroup {
-    display: none;
-}
-
-#error {
-    display: none;
-    color: var(--danger);
-}
-
-@media (max-width: 480px) {
-    .logo > h1 {
-        display: block;
+    form {
+        max-width: 400px;
+    }
+    
+    #error {
+        color: var(--danger);
+    }
+    
+    @media (max-width: 480px) {
+        .logo > h1 {
+            display: block;
+        }
     }
 }
+

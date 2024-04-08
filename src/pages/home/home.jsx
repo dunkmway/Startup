@@ -75,7 +75,7 @@ export function Home({ location }) {
     )
 
     return (
-        <main>
+        <main className="home">
             <div className="title">
                 <h2>Places Near Me</h2>
                 <p>Places within
@@ -91,7 +91,7 @@ export function Home({ location }) {
                 </p>
             </div>
             <section id="close-places" className="place-grid">
-                {loading ? loadingPlaces : places.map(doc => <Place doc={doc} key={doc._id} >Edit</Place>)}
+                {loading ? loadingPlaces : places.map(doc => <Place doc={doc} key={doc._id} >View</Place>)}
             </section>
         </main>
     )

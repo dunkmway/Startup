@@ -8,9 +8,6 @@ export default function Place(props) {
 
     return (
         <div className="place">
-            {/* <div className="map">
-                <div className="placeholder shimmer"></div>
-            </div> */}
             <GoogleMap bounds={bounds} ></GoogleMap>
             <div className="body">
                 <div className="header">

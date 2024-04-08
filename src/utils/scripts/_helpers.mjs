@@ -15,7 +15,7 @@ export async function getCurrentLocation(enableHighAccuracy = false, timeout = I
             timeout,
             maximumAge
         }
-        navigator.geolocation.getCurrentPosition((pos) => resolve(pos), (err) => reject(err), options);
+        navigator.geolocation.getCurrentPosition((pos) => resolve(pos), (err) => reject({}), options);
     })
 }
 
@@ -31,7 +31,6 @@ export async function httpRequest(URL, options = {}) {
     try {
         const response = await fetch(URL, options);
         if (response.ok) {
-            // console.log(await response.text())
             return await response.json();
         } else {
             console.warn({

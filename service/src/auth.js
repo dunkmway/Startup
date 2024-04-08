@@ -13,7 +13,7 @@ router.post('/auth/create', async (req, res) => {
   } else {
     const user = await createUser(req.body.username, req.body.password);
     setAuthCookie(res, user.token);
-    res.send({ id: user._id });
+    res.send({ _id: user._id });
   }
 });
 
@@ -23,7 +23,7 @@ router.post('/auth/login', async (req, res) => {
   if (user) {
     if (await bcrypt.compare(req.body.password, user.password)) {
       setAuthCookie(res, user.token);
-      res.send({ id: user._id });
+      res.send({ _id: user._id });
       return;
     }
   }
@@ -45,8 +45,10 @@ router.get('/auth/me', async (req, res) => {
         username: user.username
     });
     return;
+  } else {
+    res.send({});
+    return;
   }
-  res.status(401).send({ msg: 'Unauthorized' });
 });
 
 function getUser(username) {

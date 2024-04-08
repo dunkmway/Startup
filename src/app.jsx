@@ -1,6 +1,5 @@
 import React from 'react';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
-import { AuthState } from './pages/login/authState';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './app.css';
 
 import { Home } from './pages/home/home';
@@ -8,66 +7,91 @@ import { Login } from './pages/login/login';
 import { NewPlace } from './pages/new-place/new-place';
 import { Place } from './pages/place/place';
 import { Profile } from './pages/profile/profile';
+import { NotFound } from './pages/NotFound/NotFound';
+
 import { getCurrentLocation } from './utils/scripts/_helpers.mjs';
+import { getCurrentUser } from './utils/scripts/_auth.mjs';
+import { PublicAccess } from './components/PageAccess/PublicAccess';
+import { Layout } from './components/layout/layout';
+import { PrivateAccess } from './components/PageAccess/PrivateAccess';
+import { NoLocation } from './pages/NoLocation/NoLocation';
 
 function App() {
-	const [user, setUser] = React.useState(localStorage.getItem('userName') || '');
-	const currentAuthState = user ? AuthState.Authenticated : AuthState.Unauthenticated;
-	const [authState, setAuthState] = React.useState(currentAuthState);
-	const [currentLocation, setCurrentLocation] = React.useState();
+	const [user, setUser] = React.useState(null);
+	const [location, setLocation] = React.useState();
 
 	React.useEffect(() => {
 		getCurrentLocation(true, 10000, 0)
-		.then(position => {
-			setCurrentLocation(position);
-		})
-		.catch(err => {
-			console.log(err)
-		})
+		.then(position => setLocation(position))
+		.catch(err => setLocation({}));
+
+		getCurrentUser()
+		.then(user => setUser(user))
+		.catch(err => setUser({}));
 	}, [])
     
 	return (
-		<BrowserRouter>
-			<header>
-				<NavLink to="home" className="logo">
-					<img src="images/Logo.png"></img>
-					<h1>There</h1>
-				</NavLink>
-				<nav>
-					<menu>
-						{authState === AuthState.Unauthenticated && (
-							<li>
-								<NavLink to='login'>Login</NavLink>
-							</li>
-						)}
-						{authState === AuthState.Authenticated && (
-							<li>
-								<NavLink to='profile'>{user.username}</NavLink>
-							</li>
-						)}
-					</menu>
-				</nav>
-			</header>
-	
-			<Routes>
-				<Route path='/' element={<Home location={currentLocation} />}/>
-				<Route path='/login' element={<Login />} />
-				<Route path='/new-place' element={<NewPlace />} />
-				<Route path='/place' element={<Place />} />
-				<Route path='/profile' element={<Profile />} />
-				<Route path='*' element={<NotFound />} />
-			</Routes>
-	
-			<footer>
-				<p>Duncan Morais</p>
-				<a href="https://github.com/dunkmway/Startup">GitHub</a>
-			</footer>
-		</BrowserRouter>
+		<>
+			{location == null || location.coords != null ?
+				<BrowserRouter>
+					<Routes>
+						<Route 
+							path='/'
+							exact
+							element={
+								<Layout user={user} setUser={setUser}>
+									<Home location={location}/>
+								</Layout>
+							}
+						/>
+						<Route
+							path='/login'
+							element={
+								<PublicAccess user={user}>
+									<Login setUser={setUser}/>
+								</PublicAccess>
+							}
+						/>
+						<Route
+							path='/new-place'
+							element={
+								<PrivateAccess user={user}>
+									<Layout user={user} setUser={setUser}>
+										<NewPlace user={user}/>
+									</Layout>
+								</PrivateAccess>
+							}
+						/>
+						<Route
+							path='/place'
+							element={
+								<Place user={user} location={location}/>
+							}
+						/>
+						<Route
+							path='/profile'
+							element={
+								<PrivateAccess user={user}>
+									<Layout user={user} setUser={setUser}>
+										<Profile user={user}/>
+									</Layout>
+								</PrivateAccess>
+							}
+						/>
+						<Route
+							path='*'
+							element={
+								<Layout user={user} setUser={setUser}>
+									<NotFound/>
+								</Layout>
+							}
+						/>
+					</Routes>
+				</BrowserRouter> :
+				<NoLocation></NoLocation>
+			}
+		</>
     );
-}
-
-function NotFound() {
-  return <main>404: Return to sender. Address unknown.</main>;
 }
 
 export default App;

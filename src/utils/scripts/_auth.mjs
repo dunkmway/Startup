@@ -87,6 +87,4 @@ export async function signOutUser() {
     await httpRequest("/api/auth/logout", {
         method: "POST",
     })
-    await checkAuth();
-    await renderHeader();
 }
