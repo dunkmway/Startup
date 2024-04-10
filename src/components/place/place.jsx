@@ -7,7 +7,7 @@ export default function Place(props) {
     const bounds = new Bounds(doc.bounds);
 
     return (
-        <div className="place">
+        <div className="place" onClick={props.onClick}>
             <GoogleMap bounds={bounds} ></GoogleMap>
             <div className="body">
                 <div className="header">

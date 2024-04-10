@@ -21,7 +21,7 @@ function App() {
 	const [location, setLocation] = React.useState();
 
 	React.useEffect(() => {
-		getCurrentLocation(true, 10000, 0)
+		getCurrentLocation(true)
 		.then(position => setLocation(position))
 		.catch(err => setLocation({}));
 
@@ -57,7 +57,7 @@ function App() {
 							element={
 								<PrivateAccess user={user}>
 									<Layout user={user} setUser={setUser}>
-										<NewPlace user={user}/>
+										<NewPlace user={user} location={location}/>
 									</Layout>
 								</PrivateAccess>
 							}
@@ -88,7 +88,7 @@ function App() {
 						/>
 					</Routes>
 				</BrowserRouter> :
-				<NoLocation></NoLocation>
+				<NoLocation setLocation={setLocation}></NoLocation>
 			}
 		</>
     );

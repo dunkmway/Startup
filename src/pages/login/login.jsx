@@ -97,7 +97,7 @@ export function Login({ setUser }) {
     return (
         <main className="login">
             <NavLink to="/" className="logo">
-                <img src="images/Logo.png"></img>
+                <img src="./src/images/Logo.png"></img>
                 <h1>There</h1>
             </NavLink>
             <form onSubmit={handleFormSubmit}>

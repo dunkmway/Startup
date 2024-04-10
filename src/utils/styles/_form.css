@@ -1,5 +1,4 @@
 form {
-    margin-top: 2em;
     width: 100%;
 }
 
@@ -12,7 +11,9 @@ form {
     color: var(--cl-2);
 }
 
-.form-group > input, form button {
+.form-group > input,
+form button,
+.form-group > textarea {
     font-size: 16px;
     padding: 0.5em 1em;
     display: block;
@@ -20,6 +21,10 @@ form {
     border: none;
     border-radius: 0.5em;
     font-family: 'Roboto', sans-serif;
+}
+
+.form-group > textarea {
+    resize: vertical;
 }
 
 form button {

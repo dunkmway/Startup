@@ -13,20 +13,20 @@ export function Header({user, setUser}) {
     return (
         <header>
             <NavLink to="/" className="logo">
-                <img src="images/Logo.png"></img>
+                <img src="./src/images/Logo.png"></img>
                 <h1>There</h1>
             </NavLink>
             <nav>
                 <menu>
                     {(user == null || user._id == null) && (
                         <li>
-                            <NavLink to='login'>Login</NavLink>
+                            <NavLink to='/login'>Login</NavLink>
                         </li>
                     )}
                     {user?._id != null && (
                         <>
                             <li>
-                                <NavLink to='profile'>{user.username}</NavLink>
+                                <NavLink to='/profile'>{user.username}</NavLink>
                             </li>
                             <li onClick={handleSignout}>Sign Out</li>
                         </>

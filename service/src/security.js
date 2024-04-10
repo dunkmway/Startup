@@ -23,13 +23,21 @@ const RULES = {
         },
         {
             match: '.*',
-            action: [UPDATE, DELETE],
+            action: [UPDATE],
             rule: async (context) => {
                 return context.user &&
                 (await context.old.data())?.creator?._id === context.user.id &&
                 (await context.new.data())?.creator?._id === context.user.id
             }
-        }
+        },
+        {
+            match: '.*',
+            action: [DELETE],
+            rule: async (context) => {
+                return context.user &&
+                (await context.old.data())?.creator?._id === context.user.id
+            }
+        },
     ],
     users: [
         {
@@ -64,13 +72,21 @@ const RULES = {
         },
         {
             match: '.*',
-            action: [UPDATE, DELETE],
+            action: [UPDATE],
             rule: async (context) => {
                 return context.user &&
                 (await context.old.data())?.author?._id === context.user.id &&
                 (await context.new.data())?.author?._id === context.user.id
             }
-        }
+        },
+        {
+            match: '.*',
+            action: [DELETE],
+            rule: async (context) => {
+                return context.user &&
+                (await context.old.data())?.author?._id === context.user.id
+            }
+        },
     ]
 }
 

@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { getCurrentLocation } from "../../utils/scripts/_helpers.mjs";
 
-export function NoLocation() {
+export function NoLocation({ setLocation }) {
+
+    useEffect(() => {
+        getCurrentLocation(true)
+        .then(position => setLocation(position))
+        .catch(err => setLocation({}));
+    })
+
     return (
         <main style={{
             display: 'flex',

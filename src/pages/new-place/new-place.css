@@ -1,55 +1,58 @@
-/* @import "_form.css"; */
-/* @import "_placeholder.css"; */
-
-main {
+main.new-place {
     display: flex;
     flex-direction: row;
     justify-content: center;
+
+    > div {
+        flex: 1;
+    }
+    
+    .title-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .title-bar button {
+        font-size: 16px;
+        padding: 0.5em 1em;
+        display: block;
+        border: none;
+        border-radius: 0.5em;
+        font-family: 'Roboto', sans-serif;
+        background-color: var(--danger);
+        color: black;
+        cursor: pointer;
+    }
+
+    .content {
+        display: flex;
+        gap: 1em;
+    }
+    
+    .map {
+        height: 70vh;
+        flex: 2;
+    }
+
+    #loading-map {
+        height: 100%;
+        width: 100%;
+    }
+    
+    form {
+        flex: 1;
+    }
+
+    @media (width <= 1400px) {
+        .content {
+            flex-direction: column;
+        }
+
+        .map, form {
+            flex: auto;
+        }
+    }
 }
 
-main > div {
-    flex: 1;
-}
-
-.title-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.title-bar button {
-    font-size: 16px;
-    padding: 0.5em 1em;
-    display: block;
-    border: none;
-    border-radius: 0.5em;
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--danger);
-    color: black;
-    cursor: pointer;
-}
-
-#map {
-    height: 80vh;
-}
-
-#loading-map {
-    height: 100%;
-}
-
-form {
-    max-width: 600px;
-    margin-inline: auto;
-}
-
-.form-group > textarea {
-    font-size: 16px;
-    padding: 0.5em 1em;
-    display: block;
-    width: 100%;
-    border: none;
-    border-radius: 0.5em;
-    font-family: 'Roboto', sans-serif;
-    resize: vertical;
-}
   
