@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { APIProvider, Map, AdvancedMarker, useMapsLibrary, useMap } from '@vis.gl/react-google-maps'
 import { Bounds } from "../../utils/scripts/_maps.mjs";
 
@@ -25,7 +25,7 @@ export function GoogleMap({ center, bounds, editable, movable, setBounds }) {
     const position = center || (bounds && bounds.center()) || BYU_COORDS;
     const calculatedZoom = bounds ? _getZoomLevelFromBound(height, bounds) : INITIAL_MAP_ZOOM;
     
-    React.useEffect(() => {
+    useEffect(() => {
         if (map.current) {
             setHeight(map.current.offsetHeight);
         }
@@ -66,27 +66,30 @@ export function GoogleMap({ center, bounds, editable, movable, setBounds }) {
 
     return (
         <div ref={map} className="map">
-            <APIProvider apiKey={GOOGLE_MAP_API}>
-                <Map
-                    streetViewControl={false}
-                    zoomControl={editable || movable}
-                    mapTypeControl={false}
-                    rotateControl={false}
-                    fullscreenControl={editable || movable}
-                    scrollwheel={editable || movable}
-                    draggable={editable || movable}
-                    panControl={editable || movable}
-                    mapId ={'89b292be883fd595'}
+            {
+                calculatedZoom && position &&
+                <APIProvider apiKey={GOOGLE_MAP_API}>
+                    <Map
+                        streetViewControl={false}
+                        zoomControl={editable || movable}
+                        mapTypeControl={false}
+                        rotateControl={false}
+                        fullscreenControl={editable || movable}
+                        scrollwheel={editable || movable}
+                        draggable={editable || movable}
+                        panControl={editable || movable}
+                        mapId ={'89b292be883fd595'}
 
-                    defaultCenter={position}
-                    defaultZoom={calculatedZoom}
+                        defaultCenter={position}
+                        defaultZoom={calculatedZoom}
 
-                    onClick={handleOnClick}
-                >
-                    { bounds && <Rectangle bounds={bounds} editable={editable} /> }
-                    { !bounds && markers.map((marker, index) => <AdvancedMarker key={index} position={marker.position}></AdvancedMarker>) }
-                </Map>
-            </APIProvider>
+                        onClick={handleOnClick}
+                    >
+                        { bounds && <Rectangle bounds={bounds} editable={editable} /> }
+                        { !bounds && markers.map((marker, index) => <AdvancedMarker key={index} position={marker.position}></AdvancedMarker>) }
+                    </Map>
+                </APIProvider>
+            }
         </div>
     );
 }
@@ -95,7 +98,7 @@ function Rectangle({ bounds, editable }) {
     const map = useMap();
     const mapsLibrary = useMapsLibrary('maps');
     
-    React.useEffect(() => {
+    useEffect(() => {
         if (!mapsLibrary) return;
     
         const rect = new mapsLibrary.Rectangle({
@@ -112,7 +115,8 @@ function Rectangle({ bounds, editable }) {
     }, [mapsLibrary, map]);
 }
 
-function _getZoomLevelFromBound(mapHeight = 400, bounds) {
+function _getZoomLevelFromBound(mapHeight, bounds) {
+    if (!mapHeight || !bounds) return null;
     const boundHeight_deg = bounds.north - bounds.south;
     const boundHeight_meter = boundHeight_deg * 110574;
     const desiredMapHeight = boundHeight_meter * 100 / INITIAL_RECT_ZOOM_LEVEL;
