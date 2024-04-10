@@ -1,309 +1,306 @@
-/* @import "_placeholder.css"; */
-
-body {
-    overflow-x: hidden;
-}
-
-pre {
-    white-space: pre-wrap;       /* css-3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */
-}
-
-header {
-    position: fixed;
-    display: flex;
-    justify-content: space-between;
-    height: 70px;
-    width: 100%;
-}
-
-header .back {
-    padding: 1em;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-}
-
-header .back::before {
-    content: "";
-    display: block;
-    width: 15px;
-    height: 15px;
-    border: 3px solid transparent;
-    border-left-color: var(--ac-1);
-    border-bottom-color: var(--ac-1);
-    border-radius: 5px 0 5px 0;
-    transform: rotate(45deg);
-}
-
-#infoToggle {
-    position: absolute;
-    visibility: hidden;
-}
-
-header .info {
-    display: block;
-    width: 24px;
-    height: 24px;
-    text-align: center;
-    border: 2px solid var(--cl-1);
-    border-radius: 50%;
-}
-
-#placeDetails {
-    position: absolute;
-    width: 100%;
-    top: 100%;
-    left: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height ease-out 0.15s;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* backdrop-filter: blur(10px); */
-    /* -webkit-backdrop-filter: blur(10px); */
-}
-
-#placeDetails:before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    z-index: -1;
-}
-
-#infoToggle:checked ~ #placeDetails {
-    max-height: calc(100vh - 140px);
-    height: calc(100vh - 140px);
-    transition: max-height ease-out 0.25s;
-}
-
-#infoToggle:checked ~ #placeDetails {
-    max-height: calc(100vh - 140px);
-    height: calc(100vh - 140px);
-    transition: max-height ease-out 0.25s;
-}
-
-#placeDetails > div {
-    border-top: 4px solid var(--ac-1);
-    padding-inline: 2em;
-}
-
-#placeDetails .description {
-    display: flex;
-    align-items: center;
-    gap: 2em;
-    margin: 2em auto;
-    max-width: 800px;
-}
-
-#placeDetails .description > p {
-    flex: 2;
-}
-
-#placeDetails .description > .directions {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#compass {
-    --rotation: 0deg;
-
-    height: 100px;
-    width: 100px;
-    border: 4px solid var(--cl-1);
-    border-radius: 50%;
-    position: relative;
-    margin-bottom: 1em;
-}
-
-#compass:before {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-origin: center;
-    transform: translateX(-50%) rotate(var(--rotation));
-    content: '';
-    height: 4px;
-    width: 50%;
-    background: linear-gradient(to right, var(--cl-1) 0%, var(--cl-1) 50%, var(--danger) 50%, var(--danger) 100%);
-}
-
-#compass > span {
-    font-size: 1em;
-}
-
-#compass > span:nth-child(1) {
-    position: absolute;
-    top: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-#compass > span:nth-child(2) {
-    position: absolute;
-    right: 2px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-#compass > span:nth-child(3) {
-    position: absolute;
-    bottom: 2px;
-    right: 50%;
-    transform: translateX(50%);
-}
-#compass > span:nth-child(4) {
-    position: absolute;
-    left: 2px;
-    bottom: 50%;
-    transform: translateY(50%);
-}
-
-#map {
-    height: 50vh;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    max-width: 800px;
-    width: 100%;
-    margin: 70px auto;
-    padding: 1em;
-}
-
-footer {
-    height: 70px;
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-}
-
-footer > form {
-    max-width: 800px;
-    width: 100%;
-    position: relative;
-}
-
-form > textarea {
-    font-family: 'Roboto', sans-serif;
-    background-color: transparent;
-    border: 1px solid var(--cl-2);
-    border-radius: 0.5em;
-    font-size: 16px;
-    padding: 0.5em 4em 0.5em 1em;
-    width: 100%;
-    display: block;
-    color: var(--cl-1);
-    resize: none;
-}
-
-textarea:disabled {
-    cursor: not-allowed;
-}
-
-textarea:focus {
-    outline: none;
-}
-
-form > button {
-    position: absolute;
-    right: 1em;
-    top: 50%;
-    transform: translateY(-50%);
-
-    background-color: var(--ac-1);
-    color: var(--cl-1);
-
-    width: 30px;
-    height: 30px;
-    padding: 5px;
-    font-size: 20px;
-
-    border-radius: 50%;
-    border: none;
-
-    cursor: pointer;
-}
-
-.message-bubble {
-    max-width: 80%;
-    margin-top: 1em;
-    position: relative;
-}
-
-.message-bubble.left {
-    align-self: flex-start;
-}
-
-.message-bubble.right {    
-    align-self: flex-end;
-}
-
-.message-bubble > p,
-.message-bubble > pre {
-    margin: 0;
-}
-
-.message-bubble > .message {
-    max-width: 100%;
-    border-radius: 1em;
-    padding: 0.5em;
-    font-family: inherit;
-}
-
-.message-bubble.hidden > .message {
-    color: transparent;
-    text-shadow: 0px 0px 7px var(--cl-1);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.message-bubble.left > .message {
-    background-color: var(--bg-3);
-}
-
-.message-bubble.right > .message {    
-    background-color: var(--ac-1);
-}
-
-.message-bubble > .author {
-    color: var(--cl-2);
-    font-size: .75em;
-}
-
-/* This is used when the message is immediately proceeded by the same author */
-.message-bubble.same {
-    margin-top: 1px;
-}
-
-.message-bubble.same > .author {
-    display: none;
-}
-
-.message-bubble.left > .author {
-    text-align: left;
-}
-
-.message-bubble.right > .author {    
-    display: none;
-}
-
-.message-bubble > .toggle {
-    position: absolute;
-    top: 5px;
-    left: -28px;
+div.place-page {
+    
+    pre {
+        white-space: pre-wrap;       /* css-3 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    }
+    
+    header {
+        position: fixed;
+        display: flex;
+        justify-content: space-between;
+        height: 70px;
+        width: 100%;
+    }
+    
+    header .back {
+        padding: 1em;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+    }
+    
+    header .back::before {
+        content: "";
+        display: block;
+        width: 15px;
+        height: 15px;
+        border: 3px solid transparent;
+        border-left-color: var(--ac-1);
+        border-bottom-color: var(--ac-1);
+        border-radius: 5px 0 5px 0;
+        transform: rotate(45deg);
+    }
+    
+    #infoToggle {
+        position: absolute;
+        visibility: hidden;
+    }
+    
+    header .info {
+        display: block;
+        width: 24px;
+        height: 24px;
+        text-align: center;
+        border: 2px solid var(--cl-1);
+        border-radius: 50%;
+    }
+    
+    #placeDetails {
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        left: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height ease-out 0.15s;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* backdrop-filter: blur(10px); */
+        /* -webkit-backdrop-filter: blur(10px); */
+    }
+    
+    #placeDetails:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        z-index: -1;
+    }
+    
+    #infoToggle:checked ~ #placeDetails {
+        max-height: calc(100vh - 140px);
+        height: calc(100vh - 140px);
+        transition: max-height ease-out 0.25s;
+    }
+    
+    #infoToggle:checked ~ #placeDetails {
+        max-height: calc(100vh - 140px);
+        height: calc(100vh - 140px);
+        transition: max-height ease-out 0.25s;
+    }
+    
+    #placeDetails > div {
+        border-top: 4px solid var(--ac-1);
+        padding-inline: 2em;
+    }
+    
+    #placeDetails .description {
+        display: flex;
+        align-items: center;
+        gap: 2em;
+        margin: 2em auto;
+        max-width: 800px;
+    }
+    
+    #placeDetails .description > p {
+        flex: 2;
+    }
+    
+    #placeDetails .description > .directions {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #compass {
+        --rotation: 0deg;
+    
+        height: 100px;
+        width: 100px;
+        border: 4px solid var(--cl-1);
+        border-radius: 50%;
+        position: relative;
+        margin-bottom: 1em;
+    }
+    
+    #compass:before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: center;
+        transform: translateX(-50%) rotate(var(--rotation));
+        content: '';
+        height: 4px;
+        width: 50%;
+        background: linear-gradient(to right, var(--cl-1) 0%, var(--cl-1) 50%, var(--danger) 50%, var(--danger) 100%);
+    }
+    
+    #compass > span {
+        font-size: 1em;
+    }
+    
+    #compass > span:nth-child(1) {
+        position: absolute;
+        top: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    #compass > span:nth-child(2) {
+        position: absolute;
+        right: 2px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    #compass > span:nth-child(3) {
+        position: absolute;
+        bottom: 2px;
+        right: 50%;
+        transform: translateX(50%);
+    }
+    #compass > span:nth-child(4) {
+        position: absolute;
+        left: 2px;
+        bottom: 50%;
+        transform: translateY(50%);
+    }
+    
+    .map {
+        height: 50vh;
+    }
+    
+    main {
+        display: flex;
+        flex-direction: column;
+        max-width: 800px;
+        width: 100%;
+        margin: 70px auto;
+        padding: 1em;
+    }
+    
+    footer {
+        height: 70px;
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: center;
+    }
+    
+    footer > form {
+        max-width: 800px;
+        width: 100%;
+        position: relative;
+    }
+    
+    form > textarea {
+        font-family: 'Roboto', sans-serif;
+        background-color: transparent;
+        border: 1px solid var(--cl-2);
+        border-radius: 0.5em;
+        font-size: 16px;
+        padding: 0.5em 4em 0.5em 1em;
+        width: 100%;
+        display: block;
+        color: var(--cl-1);
+        resize: none;
+    }
+    
+    textarea:disabled {
+        cursor: not-allowed;
+    }
+    
+    textarea:focus {
+        outline: none;
+    }
+    
+    form > button {
+        position: absolute;
+        right: 1em;
+        top: 50%;
+        transform: translateY(-50%);
+    
+        background-color: var(--ac-1);
+        color: var(--cl-1);
+    
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+        font-size: 20px;
+    
+        border-radius: 50%;
+        border: none;
+    
+        cursor: pointer;
+    }
+    
+    .message-bubble {
+        max-width: 80%;
+        margin-top: 1em;
+        position: relative;
+    }
+    
+    .message-bubble.left {
+        align-self: flex-start;
+    }
+    
+    .message-bubble.right {    
+        align-self: flex-end;
+    }
+    
+    .message-bubble > p,
+    .message-bubble > pre {
+        margin: 0;
+    }
+    
+    .message-bubble > .message {
+        max-width: 100%;
+        border-radius: 1em;
+        padding: 0.5em;
+        font-family: inherit;
+    }
+    
+    .message-bubble.hidden > .message {
+        color: transparent;
+        text-shadow: 0px 0px 7px var(--cl-1);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    .message-bubble.left > .message {
+        background-color: var(--bg-3);
+    }
+    
+    .message-bubble.right > .message {    
+        background-color: var(--ac-1);
+    }
+    
+    .message-bubble > .author {
+        color: var(--cl-2);
+        font-size: .75em;
+    }
+    
+    /* This is used when the message is immediately proceeded by the same author */
+    .message-bubble.same {
+        margin-top: 1px;
+    }
+    
+    .message-bubble.same > .author {
+        display: none;
+    }
+    
+    .message-bubble.left > .author {
+        text-align: left;
+    }
+    
+    .message-bubble.right > .author {    
+        display: none;
+    }
+    
+    .message-bubble > .toggle {
+        position: absolute;
+        top: 5px;
+        left: -28px;
+    }
 }

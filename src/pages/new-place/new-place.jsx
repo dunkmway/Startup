@@ -79,7 +79,7 @@ export function NewPlace({ user, location }) {
                     {
                         loading ?
                         <div className="map">
-                            <div id="loading-map" className="placeholder shimmer"></div>
+                            <div className="placeholder shimmer"></div>
                         </div> :
                         <GoogleMap bounds={bounds} center={defaultCenter} editable={true} setBounds={setBounds}></GoogleMap>
                     }
