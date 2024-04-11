@@ -4,8 +4,7 @@
   "description": "[My Notes](notes.md)",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon index.js",
-    "deploy": "./bin/customDeploy.sh"
+    "serve": "nodemon index.js"
   },
   "author": "Duncan Morais",
   "license": "ISC",

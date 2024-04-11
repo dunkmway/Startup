@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "./bin/customDeploy.sh"
   },
   "dependencies": {
     "@vis.gl/react-google-maps": "^0.8.3",
