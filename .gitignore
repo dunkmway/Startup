@@ -1,6 +1,7 @@
 customDeploy.sh
 node_modules
 dist
+build
 .vscode
 .env
 dbConfig.json
