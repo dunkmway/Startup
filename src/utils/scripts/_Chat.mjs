@@ -1,17 +1,17 @@
 import Message from "./_Message.mjs";
 import { where, query } from "./_database.mjs";
-import { removeAllChildNodes } from "./_helpers.mjs";
 
 export default class Chat {
-    constructor(place, user, container, socket, isPublic = true) {
+    constructor(place, user, setMessages, isPublic = true) {
         this.place = place;
-        this.container = container;
         this.user = user;
         this.isPublic = isPublic;
+        this.messages = [];
+        this.setMessages = setMessages;
 
-        this.socket = socket;
+        const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+        this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
         this.isConnected = false;
-
         this._setupSocket();
     }
 
@@ -19,35 +19,31 @@ export default class Chat {
         // Display that we have opened the webSocket
         this.socket.onopen = (event) => {
             this.isConnected = true;
-            console.log('connected');
+
+            // send the connection message to this chat's place
+            const msg = {
+                type: 'listen',
+                place: this.place
+            }
+            this.socket.send(JSON.stringify(msg));
         };
 
         // Display messages we receive from our friends
         this.socket.onmessage = async (event) => {
-            // const text = await event.data.text();
-            // this.getMessage(JSON.parse(text));
             this.getMessage(JSON.parse(event.data));
         };
 
         // If the webSocket is closed then disable the interface
         this.socket.onclose = (event) => {
             this.isConnected = false;
-            console.log('disconnected');
         };
-
-        // send the connection message to this chat's place
-        const msg = {
-            type: 'listen',
-            place: this.place
-        }
-        this.socket.send(JSON.stringify(msg));
     }
 
     getMessage(data) {
         const existingMessage = this.messages.find(message => message._id === data._id);
         if (existingMessage) {
             existingMessage.update(data);
-            this.renderMessage(existingMessage);
+            this.setMessages([...this.messages]);
         } else {
             const newMessage = new Message(
                 this.socket,
@@ -64,7 +60,7 @@ export default class Chat {
             // store the message to the chat
             this.messages.push(newMessage);
             // render the message
-            this.renderMessage(newMessage);
+            this.setMessages([...this.messages]);
         }
     }
 
@@ -87,43 +83,9 @@ export default class Chat {
         // store the message to the chat
         this.messages.push(newMessage);
         // render the message
-        this.renderMessage(newMessage);
-
-        // scroll the message into view
-        this._scrollToMessage(newMessage);
+        this.setMessages([...this.messages]);
 
         return newMessage;
-    }
-
-    makePublic() {
-        this.isPublic = true;
-        this._render();
-    }
-
-    makePrivate() {
-        this.isPublic = false;
-        this._render();
-    }
-
-    renderMessage(message) {
-        this.isPublic ? message.renderPublic(this.container) : message.renderPrivate(this.container);
-    }
-
-    _scrollToMessage(message) {
-        message.element.scrollIntoView();
-    }
-
-    /**
-     * 
-     * @param {Boolean} rerender will remove all messages and rerender them.
-     */
-    _render(rerender = false) {
-        if (rerender) {
-            removeAllChildNodes(this.container);
-        }
-        this.messages.forEach(message => {
-            this.isPublic ? message.renderPublic(this.container) : message.renderPrivate(this.container);
-        });
     }
 
     async loadMessages() {

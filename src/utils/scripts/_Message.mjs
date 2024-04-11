@@ -1,5 +1,5 @@
 import { saveDoc } from "./_database.mjs";
-import { getRandomIndex, removeAllChildNodes } from "./_helpers.mjs";
+import { getRandomIndex } from "./_helpers.mjs";
 
 export default class Message {
     constructor(socket, place, content, user, isSame, isOwner = true, isPublic = false, createdAt = null, _id = null) {
@@ -40,60 +40,6 @@ export default class Message {
 
     update(data) {
         Object.assign(this, data);
-    }
-
-    renderPublic(container) {
-        this._render(container, true);
-    }
-
-    renderPrivate(container) {
-        this._render(container, false)
-    }
-
-    _render(container, isPublicRendering) {
-        // basic setup if first render
-        if (this.element == null) {
-            this.element = document.createElement('div');
-            this.element.classList.add('message-bubble');
-            container.appendChild(this.element);
-        }
-
-        // rerendering
-        removeAllChildNodes(this.element);
-        const author = document.createElement('p');
-        author.className = 'author';
-        author.textContent = this.author.username;
-        this.element.appendChild(author);
-
-        const isHidden = !this.isOwner && isPublicRendering && !this.isPublic;
-        const message = document.createElement('pre');
-        message.classList.add('message');
-        message.textContent = isHidden ? this.randomContent : this.content;
-        this.element.appendChild(message);
-        
-        this.element.classList.add(this.isOwner ? 'right' : 'left');
-        if (this.isOwner) {
-            // include the visibility toggle
-            const toggle = document.createElement('div');
-            toggle.className = 'toggle';
-            toggle.innerHTML = `
-            ${this.isPublic ?
-                '<img src="images/visible.png">':
-                '<img src="images/invisible.png">'
-            }
-            `
-            toggle.addEventListener('click', () => this._toggleVisibility(container, isPublicRendering));
-            this.element.appendChild(toggle);
-        }
-        isHidden && this.element.classList.add('hidden');
-        !isHidden && this.element.classList.remove('hidden');
-        this.isSame && this.element.classList.add('same');
-    }
-
-    _toggleVisibility(container, isPublicRendering) {
-        this.isPublic = !this.isPublic;
-        this.save();
-        this._render(container, isPublicRendering);
     }
 }
 

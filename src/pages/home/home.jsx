@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 import Place from "../../components/place/place";
 import "./home.css"
 
@@ -7,9 +8,10 @@ import { debounce } from "../../utils/scripts/_helpers.mjs";
 import { Geo } from "../../utils/scripts/_maps.mjs";
 
 export function Home({ location }) {
-    const [distance, setDistance] = React.useState('5');
+    const [distance, setDistance] = React.useState('2');
     const [loading, setLoading] = React.useState(true);
     const [places, setPlaces] = React.useState([]);
+    const navigate = useNavigate();
 
     const milesChanged = React.useCallback(debounce((location, distance) => {
         if (location) {
@@ -35,6 +37,10 @@ export function Home({ location }) {
     }), []);
 
     React.useEffect(() => milesChanged(location, distance), [location, distance])
+
+    function onClickPlace(id) {
+        navigate(`/place?p=${id}`);
+    }
 
     function closeMilesOnKeydown(event) {
         event.preventDefault();
@@ -91,7 +97,7 @@ export function Home({ location }) {
                 </p>
             </div>
             <section id="close-places" className="place-grid">
-                {loading ? loadingPlaces : places.map(doc => <Place doc={doc} key={doc._id} >View</Place>)}
+                {loading ? loadingPlaces : places.map(doc => <Place doc={doc} key={doc._id} onClick={() => onClickPlace(doc._id)} >View</Place>)}
             </section>
         </main>
     )
