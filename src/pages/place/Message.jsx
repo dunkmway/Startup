@@ -19,8 +19,8 @@ export function Message({ _message, isPublicChat }) {
                 <div className="toggle" onClick={handleToggle}>
                 {
                     message.isPublic ?
-                    <img src="./src/images/visible.png"/>:
-                    <img src="./src/images/invisible.png"/>
+                    <img src="./images/visible.png"/>:
+                    <img src="./images/invisible.png"/>
                 }
                 </div>
             }

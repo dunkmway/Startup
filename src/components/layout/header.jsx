@@ -13,7 +13,7 @@ export function Header({user, setUser}) {
     return (
         <header>
             <NavLink to="/" className="logo">
-                <img src="./src/images/Logo.png"></img>
+                <img src="./images/Logo.png"></img>
                 <h1>There</h1>
             </NavLink>
             <nav>

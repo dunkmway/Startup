@@ -52,7 +52,7 @@ export function Profile({ user }) {
                     <div id="emptyMessage">
                         <div className="meme">
                             <p>NO PLACES?</p>
-                            <img src="./src/images/NoPlaces.jpg"/>
+                            <img src="./images/NoPlaces.jpg"/>
                         </div>
                         <h2>Creating your first place!</h2>
                         <NavLink to="/new-place"><button>New Place</button></NavLink>
