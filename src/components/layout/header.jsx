@@ -18,7 +18,7 @@ export function Header({user, setUser}) {
             </NavLink>
             <nav>
                 <menu>
-                    {(user == null || user._id == null) && (
+                    {(user?._id == null) && (
                         <li>
                             <NavLink to='/login'>Login</NavLink>
                         </li>

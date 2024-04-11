@@ -22,7 +22,7 @@ export function GoogleMap({ center, bounds, editable, movable, setBounds }) {
     editable = !!editable;
     movable = !!movable;
 
-    const position = center || (bounds && bounds.center()) || BYU_COORDS;
+    const position = center || (bounds && bounds?.center()) || BYU_COORDS;
     const calculatedZoom = bounds ? _getZoomLevelFromBound(height, bounds) : INITIAL_MAP_ZOOM;
     
     useEffect(() => {
