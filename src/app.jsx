@@ -21,8 +21,24 @@ function App() {
 	const [location, setLocation] = React.useState();
 
 	React.useEffect(() => {
+		function continuousLocation() {
+			setTimeout(() => {
+				getCurrentLocation(true)
+				.then(position => {
+					setLocation(position);
+					continuousLocation();
+				})
+				.catch(err => setLocation({}));
+			}, 30000)
+		}
+
+		// get the location the first time immediately
 		getCurrentLocation(true)
-		.then(position => setLocation(position))
+		.then(position => {
+			setLocation(position);
+			// then get it every 30 seconds after
+			continuousLocation();
+		})
 		.catch(err => setLocation({}));
 
 		getCurrentUser()

@@ -103,13 +103,16 @@ export function Place({ user, location }) {
                             <div className="description">
                                 <p>{placeDoc?.description}</p>
                                 <div className="directions">
-                                    <div id="compass" style={{"--rotation": `${-1*angle}deg`}}>
+                                    <div id="compass" style={{"--rotation": `${-1 * (angle ? angle : 90)}deg`}}>
                                         <span>N</span>
                                         <span>E</span>
                                         <span>S</span>
                                         <span>W</span>
                                     </div>
                                     <div>
+                                        {
+                                            (!location || !location.coords) && <span>Calculating...</span>
+                                        }
                                         <span id="distance">{distance == 0 ? null : `${Math.round(distance * 100) / 100} mi `}</span>
                                         <span id="direction">{direction === '' ? 'You are here!' : direction}</span>
                                     </div>

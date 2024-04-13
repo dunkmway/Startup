@@ -29,8 +29,8 @@ export class Bounds {
     }
 
     angleFrom(lat, lng) {
-        if (!lat || !lng) return 450;
-        if (this.contains(lat, lng)) return null;
+        if (!lat || !lng) return 450;               // impossible angle to represent bad formatting
+        if (this.contains(lat, lng)) return null;   // null to represent at current location
 
         const { lat: closeLat, lng: closeLng } = this.closestPointTo(lat, lng);
         return Geo.fromBearingToDeg(Geo.bearing(lat, lng, closeLat, closeLng));
