@@ -62,13 +62,13 @@ div.place-page {
         overflow: hidden;
         transition: max-height ease-out 0.15s;
         background-color: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
     }
     
     #placeDetails:before {
         content: '';
         position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         -webkit-backdrop-filter: blur(10px);
@@ -77,8 +77,8 @@ div.place-page {
     }
     
     #infoToggle:checked ~ #placeDetails {
-        max-height: calc(100vh - var(--header-height) - var(--footer-height));
-        height: calc(100vh - var(--header-height) - var(--footer-height));
+        max-height: calc(100dvh - var(--header-height) - var(--footer-height));
+        height: calc(100dvh - var(--header-height) - var(--footer-height));
         transition: max-height ease-out 0.25s;
     }
     
@@ -167,7 +167,7 @@ div.place-page {
         flex-direction: column-reverse;
         overflow-anchor: auto !important;
         overflow: auto;
-        height: calc(100vh - var(--header-height) - var(--footer-height));
+        height: calc(100dvh - var(--header-height) - var(--footer-height));
         max-width: 800px;
         margin: var(--header-height) auto var(--footer-height);
         padding: 1em;
