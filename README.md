@@ -103,3 +103,12 @@ For this deliverable I used webSocket to update the chat messages on the fronten
 - **Frontend makes WebSocket connection** - done!
 - **Data sent over WebSocket connection** - done!
 - **WebSocket data displayed** - All user messages display in realtime.
+
+## React deliverable
+
+For this deliverable I converted the application over to use React. That was so much work!
+
+- **Bundled and transpiled** - done!
+- **Components** - Home, login, profile, place, new-place, google maps, place-card, message, header, footer, and authorization are all components.
+- **Router** - Routing between login and all pages.
+- **Hooks** - useState is used to keep track of app state as well as useEffect for initial loading.
