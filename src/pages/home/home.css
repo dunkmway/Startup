@@ -15,6 +15,6 @@ main.home {
         border-bottom: 2px solid var(--ac-1);
         text-align: center;
         border-radius: 0;
-        padding: 0;
+        padding: 0 5px;
     }
 }
