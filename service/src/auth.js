@@ -23,7 +23,10 @@ router.post('/auth/login', async (req, res) => {
   if (user) {
     if (await bcrypt.compare(req.body.password, user.password)) {
       setAuthCookie(res, user.token);
-      res.send({ _id: user._id });
+      res.send({
+        _id: user._id,
+        username: user.username
+      });
       return;
     }
   }
@@ -41,8 +44,8 @@ router.get('/auth/me', async (req, res) => {
   const user = await collection.findOne({ token: authToken });
   if (user) {
     res.send({
-        _id: user._id,
-        username: user.username
+      _id: user._id,
+      username: user.username
     });
     return;
   } else {
