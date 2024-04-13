@@ -1,6 +1,7 @@
 const { WebSocketServer } = require('ws');
 const { getRandomMessage } = require('./fakeMessages.js')
 const db = require('./mongodb.js');
+const uuid = require('uuid');
 
 // Create a websocket object
 const wss = new WebSocketServer({ noServer: true });
@@ -16,10 +17,9 @@ function protocolUpgrade(server) {
 
 // Keep track of all the connections so we can forward messages
 let chats = {}
-let id = 0;
 
 wss.on('connection', (ws) => {
-  const connection = { id: ++id, alive: true, ws: ws };
+  const connection = { id: uuid.v4(), alive: true, ws: ws };
 
   // Forward messages to everyone except the sender
   ws.on('message', function message(message) {

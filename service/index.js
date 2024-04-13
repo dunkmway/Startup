@@ -13,6 +13,9 @@ app.use(cookieParser());
 // Serve up the front-end static content hosting
 app.use(express.static('public'));
 
+// Trust headers that are forwarded from the proxy so we can determine IP addresses
+app.set('trust proxy', true);
+
 // Router for service endpoints
 app.disable('etag');
 app.use(`/api`, require('./src/hello.js'));
@@ -25,7 +28,7 @@ app.use('/api/*', (req, res) => {
 
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
-  res.redirect('/');
+  res.sendFile('index.html', { root: 'public' });
 });
 
 const server = app.listen(port, () => {
