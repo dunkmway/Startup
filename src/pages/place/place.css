@@ -1,4 +1,5 @@
 div.place-page {
+    overflow-y: hidden;
 
     --header-height: 70px;
     --footer-height: 70px;
@@ -61,8 +62,8 @@ div.place-page {
         overflow: hidden;
         transition: max-height ease-out 0.15s;
         background-color: rgba(0, 0, 0, 0.5);
-        /* backdrop-filter: blur(10px); */
-        /* -webkit-backdrop-filter: blur(10px); */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
     
     #placeDetails:before {
