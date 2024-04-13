@@ -6,7 +6,10 @@ export function Message({ _message, isPublicChat }) {
     function handleToggle() {
         message.isPublic = !message.isPublic
         message.save();
-        setMessage(message);
+        // clone the object so that React detects a chnage and will force the refresh
+        // it needs to be this gross since we need to copy the object including its methods
+        let clone = Object.assign(Object.create(Object.getPrototypeOf(message)), message)
+        setMessage(clone);
     }
 
     const isHidden = !message.isOwner && isPublicChat && !message.isPublic;
@@ -19,7 +22,7 @@ export function Message({ _message, isPublicChat }) {
                 <div className="toggle" onClick={handleToggle}>
                 {
                     message.isPublic ?
-                    <img src="./images/visible.png"/>:
+                    <img src="./images/visible.png"/> :
                     <img src="./images/invisible.png"/>
                 }
                 </div>

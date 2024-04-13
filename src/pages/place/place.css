@@ -1,4 +1,7 @@
 div.place-page {
+
+    --header-height: 70px;
+    --footer-height: 70px;
     
     pre {
         white-space: pre-wrap;       /* css-3 */
@@ -12,7 +15,7 @@ div.place-page {
         position: fixed;
         display: flex;
         justify-content: space-between;
-        height: 70px;
+        height: var(--header-height);
         width: 100%;
     }
     
@@ -163,18 +166,25 @@ div.place-page {
     .map {
         height: 50vh;
     }
-    
+
     main {
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
+        overflow-anchor: auto !important;
+        overflow: auto;
+        height: calc(100vh - var(--header-height) - var(--footer-height));
         max-width: 800px;
-        width: 100%;
-        margin: 70px auto;
+        margin: var(--header-height) auto var(--footer-height);
         padding: 1em;
     }
     
+    main #chat {
+        display: flex;
+        flex-direction: column;
+    }
+    
     footer {
-        height: 70px;
+        height: var(--footer-height);
         position: fixed;
         bottom: 0px;
         width: 100%;
@@ -235,6 +245,7 @@ div.place-page {
         max-width: 80%;
         margin-top: 1em;
         position: relative;
+        transform: translateZ(0);
     }
     
     .message-bubble.left {

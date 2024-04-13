@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./place.css"
 
@@ -130,10 +130,12 @@ export function Place({ user, location }) {
                 </div>
             </header>
 
-            <main id="chat">
-                {chat && messages.map(message => {
-                    return <Message key={message._id} _message={message} isPublicChat={isPublic} ></Message>
-                })}
+            <main>
+                <div id="chat">
+                    {chat && messages.map(message => {
+                        return <Message key={message._id} _message={message} isPublicChat={isPublic} ></Message>
+                    })}
+                </div>
             </main>
             
             <footer>        
